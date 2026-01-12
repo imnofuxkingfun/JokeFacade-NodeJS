@@ -1,26 +1,21 @@
-import graphql from 'graphql';
-import userType from '../types/userType.js';
-import {findEntity} from '../../fakeDb.js';
-import context from '../../context.js';
+// import graphql from 'graphql';
+// import userType from '../types/userType.js';
+// const { GraphQLInt } = graphql;
 
-const { GraphQLInt } = graphql;
+// const userQueryResolver = async (_, { id }, context) => {
+//     const { db } = context; 
+    
+//     return await db.User.findByPk(id, {
+//         attributes: ['id', 'username']
+//     });
+// };
 
+// const userQuery = {
+//     type: userType,
+//     args: {
+//         id: { type: GraphQLInt }
+//     },
+//     resolve: userQueryResolver
+// };
 
-const userQueryResolver = (_, { id }) => {
-    return context.db.users.findUnique({ 
-        select: {
-            id: true,
-            username: true,
-        },
-        where: { id } }) || null;
-};
-
-const userQuery = {
-    type: userType,
-    args: {
-        id: { type: GraphQLInt }
-    },
-    resolve: userQueryResolver
-};
-
-export default userQuery;
+// export default userQuery;

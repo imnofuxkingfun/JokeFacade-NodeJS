@@ -2,12 +2,12 @@ import graphql from 'graphql'
 
 const { GraphQLObjectType, GraphQLInt, GraphQLString } = graphql;
 
-const userType = new GraphQLObjectType({
-	name: 'User',
+const roleType = new GraphQLObjectType({
+	name: 'Role',
 	fields: {
 		id: { type: GraphQLInt },
-		username: { type: GraphQLString },
+		name: { type: GraphQLString },
 	},
 });
 
-export default userType;
+export default roleType;

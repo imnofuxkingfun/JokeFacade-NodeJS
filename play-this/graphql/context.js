@@ -1,25 +1,28 @@
-// import { PrismaClient } from './prisma/generated/client'
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient();
-const jwt = require('jsonwebtoken');
+import jwt from 'jsonwebtoken';
+import 'dotenv/config';
+// Import the object you exported from your database.js (the one with associations)
+import dbModels from '../database.js'; 
 
 const context = async ({ req }) => {
-  //get the user token from the headers
-  const token = req.headers.authorization || '';
-  let user = null;
+  const auth = req.headers.authorization || '';
+  const token = auth.replace('Bearer ', '');
   
-  try {
-    if (token) {
-      user = jwt.verify(token.replace('Bearer ', ''), process.env.JWT_SECRET);
+  let user = null;
+
+  if (token) {
+    try {
+      user = jwt.verify(token, process.env.JWT_SECRET);
+    } catch (e) {
+      // Don't throw an error here, or the whole query fails. 
+      // Just keep user as null; resolvers will handle permissions.
+      console.warn("Session expired or invalid token");
     }
-  } catch (e) {
-    console.warn("Invalid token");
   }
 
-  return { //provide user info to resolvers
-    db: prisma,
+  return {
+    db: dbModels, 
     user: user,
   };
 };
 
-module.exports = context;
+export default context;
