@@ -1,21 +1,16 @@
-import graphql from 'graphql';
-import roleType from '../types/roleType.js';
-const { GraphQLInt } = graphql;
-
-const roleQueryResolver = async (_, { id }, context) => {
-    const { db } = context; 
-    
-    return await db.Role.findByPk(id, {
-        attributes: ['id', 'name']
-    });
-};
+import { GraphQLID, GraphQLNonNull } from 'graphql';
+import RoleType from '../types/roleType.js';
+import { Role } from '../database.js'; 
 
 const roleQuery = {
-    type: roleType,
-    args: {
-        id: { type: GraphQLInt }
-    },
-    resolve: roleQueryResolver
+  type: RoleType,
+  args: {
+    id: { type: new GraphQLNonNull(GraphQLID) }
+  },
+  resolve: async (parent, args) => {
+    // Sequelize logic replaces the fakeDb call
+    return await Role.findByPk(args.id);
+  }
 };
 
 export default roleQuery;

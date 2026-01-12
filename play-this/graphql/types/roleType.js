@@ -1,13 +1,11 @@
-import graphql from 'graphql'
+import { GraphQLObjectType, GraphQLString, GraphQLID } from 'graphql';
 
-const { GraphQLObjectType, GraphQLInt, GraphQLString } = graphql;
-
-const roleType = new GraphQLObjectType({
-	name: 'Role',
-	fields: {
-		id: { type: GraphQLInt },
-		name: { type: GraphQLString },
-	},
+const RoleType = new GraphQLObjectType({
+  name: 'Role',
+  fields: () => ({
+    id: { type: GraphQLID },
+    name: { type: GraphQLString },
+  })
 });
 
-export default roleType;
+export default RoleType;

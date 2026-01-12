@@ -1,16 +1,33 @@
 // index.js
 import { ApolloServer } from '@apollo/server';
-// import { startStandaloneServer } from '@apollo/server/standalone';
-import queryType from './graphql/rootTypes/queryType.js'
-import mutationType from './graphql/rootTypes/mutationType.js'
-import context from './graphql/context.js';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import { rootSchema } from './graphql/rootSchema.js';
+import {sequelize} from './graphql/database.js';
+import { createContext } from './graphql/context.js';
+
 
 const server = new ApolloServer({
-  queryType,
-  //mutationType,
-  context,
+  schema: rootSchema,
 });
 
-server.listen().then(({ url }) => {
-  console.log(`🚀 Server ready at ${url}`);
-});
+// Sync DB and start server
+async function startServer() {
+  try {
+    await sequelize.authenticate();
+    console.log('Database connected!');
+    
+    await sequelize.sync({ alter: false });
+    console.log('Database synced!');
+    
+    const { url } = await startStandaloneServer(server, {
+      listen: { port: 4000 },
+      context: createContext,
+    });
+
+    console.log(`Server ready at: ${url}`);
+  } catch (err) {
+    console.error('Error starting server', err);
+  }
+}
+
+startServer();

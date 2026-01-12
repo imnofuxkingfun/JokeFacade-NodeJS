@@ -1,28 +1,41 @@
 import jwt from 'jsonwebtoken';
-import 'dotenv/config';
-// Import the object you exported from your database.js (the one with associations)
-import dbModels from '../database.js'; 
+import { User } from './database.js';
 
-const context = async ({ req }) => {
-  const auth = req.headers.authorization || '';
-  const token = auth.replace('Bearer ', '');
-  
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+
+export async function createContext({ req }) {
+  // Get token from Authorization header
+  const token = req?.headers?.authorization?.replace('Bearer ', '') || '';
+
   let user = null;
 
   if (token) {
     try {
-      user = jwt.verify(token, process.env.JWT_SECRET);
-    } catch (e) {
-      // Don't throw an error here, or the whole query fails. 
-      // Just keep user as null; resolvers will handle permissions.
-      console.warn("Session expired or invalid token");
+      // Verify and decode the token
+      const decoded = jwt.verify(token, JWT_SECRET);
+      
+      // Fetch user from database
+      user = await User.findByPk(decoded.id);
+      
+      if (!user) {
+        throw new Error('User not found');
+      }
+    } catch (err) {
+      console.error('Token verification failed:', err.message);
+      // Token is invalid or expired, user remains null
     }
   }
 
   return {
-    db: dbModels, 
-    user: user,
+    user,
+    JWT_SECRET,
   };
-};
+}
 
-export default context;
+// Helper function to verify user is authenticated
+export function requireAuth(user) {
+  if (!user) {
+    throw new Error('Authentication required');
+  }
+  return user;
+}

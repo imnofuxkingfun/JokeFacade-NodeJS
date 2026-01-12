@@ -1,15 +1,15 @@
 import { Sequelize } from 'sequelize';
 import 'dotenv/config';
 
-import RoleModel from './models/Role.js';
-import UserModel from './models/User.js';
-import ProfileModel from './models/Profile.js';
-import GenreModel from './models/Genre.js';
-import ArtistModel from './models/Artist.js';
-import SongModel from './models/Song.js';
-import UserLikedSongModel from './models/UserLikedSongs.js';
-import BlogModel from './models/Blog.js';
-import CommentModel from './models/Comment.js';
+import RoleModel from '../models/Role.js';
+import UserModel from '../models/User.js';
+import ProfileModel from '../models/Profile.js';
+import GenreModel from '../models/Genre.js';
+import ArtistModel from '../models/Artist.js';
+import SongModel from '../models/Song.js';
+import UserLikedSongModel from '../models/UserLikedSongs.js';
+import BlogModel from '../models/Blog.js';
+import CommentModel from '../models/Comment.js';
 
 const sequelize =  new Sequelize('playThis', 'postgres', 'record44LABEL', {
   host: 'localhost',
@@ -23,17 +23,6 @@ const sequelize =  new Sequelize('playThis', 'postgres', 'record44LABEL', {
 //   port: process.env.DB_PORT,
 //   dialect: 'postgres',
 // });
-
-async function testConnection() {
-  try {
-    await sequelize.sync({ alter: true });
-    console.log('Connection has been established successfully.');
-  } catch (error) {
-    console.error('Unable to connect to the database:', error);
-  }
-}
-
-testConnection();
 
 
 
