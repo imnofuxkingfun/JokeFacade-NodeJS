@@ -5,11 +5,11 @@ import { Role } from '../database.js';
 const roleQuery = {
   type: RoleType,
   args: {
-    id: { type: new GraphQLNonNull(GraphQLID) }
+    id: { type: GraphQLID },
   },
-  resolve: async (parent, args) => {
-    // Sequelize logic replaces the fakeDb call
-    return await Role.findByPk(args.id);
+  resolve: async (parent, args, context) => {
+    const id = args.id || context.user.role_id; //if id isnt provided, get user from jwt context
+    return await Role.findByPk(id);
   }
 };
 
