@@ -4,6 +4,7 @@ import rolesQuery from './queries/rolesQuery.js';
 import artistQuery from './queries/artistQuery.js';
 import artistsQuery from './queries/artistsQuery.js';
 import songQuery from './queries/songQuery.js';
+import randomSongQuery from './queries/randomSongQuery.js';
 import songsQuery from './queries/songsQuery.js';
 import userLikedSongsQuery from './queries/userLikedSongsQuery.js';
 import userQuery from './queries/userQuery.js';
@@ -36,6 +37,7 @@ import deleteCommentMutation from './mutations/deleteCommentMutation.js';
 import editCommentMutation from './mutations/editCommentMutation.js';
 import deleteUserMutation from './mutations/deleteUserMutation.js';
 import editUserMutation from './mutations/editUserMutation.js';
+import addLikedSongMutation from './mutations/addLikedSongMutation.js';
 
 
 const RootQuery = new GraphQLObjectType({
@@ -47,6 +49,7 @@ const RootQuery = new GraphQLObjectType({
     artists: artistsQuery,
     song: songQuery,
     songs: songsQuery,
+    randomSong: randomSongQuery,
     likedSongs: userLikedSongsQuery,
     user: userQuery,
     users: usersQuery,
@@ -82,6 +85,7 @@ const RootMutation = new GraphQLObjectType({
     editComment: editCommentMutation,
     deleteUser: deleteUserMutation,
     editUser: editUserMutation,
+    addLikedSong: addLikedSongMutation,
   }
 });
 
