@@ -12,7 +12,10 @@ const loginMutation = {
     email: { type: new GraphQLNonNull(GraphQLString) },
     password: { type: new GraphQLNonNull(GraphQLString) },
   },
-  async resolve(_, args) {
+  resolve: async (_, args, context) => {
+    if(context.user){
+      throw new Error('You are already logged in');
+    }
     const { email, password } = args;
     const user = await User.findOne({ where: { email } });
     if (!user) {

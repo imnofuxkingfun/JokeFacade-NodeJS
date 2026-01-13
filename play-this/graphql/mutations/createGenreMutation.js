@@ -10,6 +10,7 @@ const createGenreMutation = {
     song_ids: { type: new GraphQLList(GraphQLInt) },
   },
   async resolve(_, { name, parent_genre_id, song_ids }, context) {
+    
     //only admin can create genres
     if (!context.user || !context.isAdmin) {
         throw new Error('Unauthorized: only admins can create genres');

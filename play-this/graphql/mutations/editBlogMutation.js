@@ -11,11 +11,14 @@ const editBlogMutation = {
   },
   async resolve(_, { id, input }, context) {
 
-    
-
     const blog = await Blog.findByPk(id);
     if (!blog) {
       throw new Error('Blog not found');
+    }
+
+    //check if user is logged in
+    if (!context.user) {
+      throw new Error('Unauthorized: you must be logged in to edit a blog');
     }
     
     // check if user owns the blog 

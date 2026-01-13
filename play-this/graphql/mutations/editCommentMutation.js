@@ -15,6 +15,11 @@ const editCommentMutation = {
       throw new Error('Comment not found');
     }
     
+    // Check if user is logged in
+    if (!context.user) {
+      throw new Error('Unauthorized: you must be logged in to edit a comment');
+    }
+
     // Check if user owns the comment
     if (comment.user_id !== context.user?.id) {
       throw new Error('Unauthorized: can only edit your own comment');

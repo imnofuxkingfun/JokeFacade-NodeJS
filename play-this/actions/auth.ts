@@ -1,4 +1,5 @@
 'use server'
+
 import { LoginFormSchema, SignupFormSchema } from '@/lib/definitions'
 import { z } from 'zod';
 import { gql } from 'graphql-request';
