@@ -2,7 +2,7 @@
 
 import { login } from "@/actions/auth";
 import { useAuth } from "@/context/authContext";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { useActionState, useEffect } from "react";
 
 export default function LoginForm() {
