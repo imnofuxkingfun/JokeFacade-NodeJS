@@ -130,5 +130,10 @@ export async function signup(prevState: unknown, formData: FormData) {
     console.error("Eroare GraphQL:", error.response?.errors);
     return { message: error.response?.errors[0]?.message || "Eroare la înregistrare" };
   }
+}
 
+export async function logout() {
+  const cookieStore = await cookies();
+  cookieStore.delete('session_token');
+  
 }

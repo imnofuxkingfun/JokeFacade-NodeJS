@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionUser } from '@/actions/auth';
 
-const protectedRoutes = [''];
+const protectedRoutes = ['/test'];
 const authRoutes = ['/login', '/register'];
 
 export default async function middleware(request: NextRequest) {
@@ -13,6 +13,7 @@ export default async function middleware(request: NextRequest) {
   }
 
   if (!user && protectedRoutes.some(route => path.startsWith(route))) {
+    console.log('Redirecting to login from middleware');
     return NextResponse.redirect(new URL('/login', request.url));
   }
 }

@@ -1,5 +1,6 @@
 'use client'
 import React, { createContext, useContext, useState } from 'react';
+import { logout as logoutAction } from '@/actions/auth';
 
 // 1. Definim structura datelor pentru User
 interface User {
@@ -34,7 +35,10 @@ export const AuthProvider = ({
 
   const logout = async () => {
     // Aici poți adăuga un apel către un Server Action care șterge cookie-ul
+    await logoutAction();
     setUser(null);
+
+    window.location.href = '/login';
   };
 
   return (
