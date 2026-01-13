@@ -10,6 +10,7 @@ import songsQuery from './queries/songsQuery.js';
 import userLikedSongsQuery from './queries/userLikedSongsQuery.js';
 import signupMutation from './mutations/signupMutation.js';
 import loginMutation from './mutations/loginMutation.js'
+import usersQuery from './queries/usersQuery.js';
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -21,6 +22,7 @@ const RootQuery = new GraphQLObjectType({
     song: songQuery,
     songs: songsQuery,
     likedSongs: userLikedSongsQuery,
+    users: usersQuery,
   }
 });
 

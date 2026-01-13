@@ -1,9 +1,9 @@
 import jwt from 'jsonwebtoken';
 import { User } from './database.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET;
 
-export async function createContext({ req }) {
+export async function createContext({ req, res }) {
   // Get token from Authorization header
   const token = req?.headers?.authorization?.replace('Bearer ', '') || '';
 
@@ -20,6 +20,8 @@ export async function createContext({ req }) {
       if (!user) {
         throw new Error('User not found');
       }
+
+      console.log('Authenticated user:', user.username);
     } catch (err) {
       console.error('Token verification failed:', err.message);
       // Token is invalid or expired, user remains null
@@ -27,6 +29,8 @@ export async function createContext({ req }) {
   }
 
   return {
+    req,
+    res,
     user,
     JWT_SECRET,
   };

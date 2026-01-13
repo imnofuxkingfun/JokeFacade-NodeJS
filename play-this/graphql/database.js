@@ -13,7 +13,7 @@ import CommentModel from '../models/Comment.js';
 
 const sequelize =  new Sequelize('playThis', 'postgres', 'record44LABEL', {
   host: 'localhost',
-  port: 7447,
+  port: 5432,
   dialect: 'postgres'
 });
 
