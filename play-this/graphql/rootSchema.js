@@ -38,7 +38,7 @@ import editCommentMutation from './mutations/editCommentMutation.js';
 import deleteUserMutation from './mutations/deleteUserMutation.js';
 import editUserMutation from './mutations/editUserMutation.js';
 import addLikedSongMutation from './mutations/addLikedSongMutation.js';
-
+import deleteLikedSongMutation from './mutations/deleteLikedSongMutation.js';
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -86,6 +86,7 @@ const RootMutation = new GraphQLObjectType({
     deleteUser: deleteUserMutation,
     editUser: editUserMutation,
     addLikedSong: addLikedSongMutation,
+    deleteLikedSong: deleteLikedSongMutation,
   }
 });
 

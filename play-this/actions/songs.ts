@@ -40,6 +40,16 @@ const LIKED_SONGS_QUERY = gql`
 }
 `;
 
+const DELETE_LIKED_SONG_MUTATION = gql`
+mutation DeleteLikedSong($songId: ID!) {
+  deleteLikedSong(songId: $songId) {
+    id,
+    name,
+    spotifyLink
+  }
+}
+`;
+
 async function verifyUserSession() {
     const cookieStore = await cookies();
     const token = cookieStore.get('session_token')?.value;
@@ -106,5 +116,23 @@ export async function getAllLikedSongs() {
     catch (error: any) {
         console.error("Eroare GraphQL:", error.response?.errors);
         return { success: false, message: "Eroare la salvarea melodiei." };
+    }
+}
+
+export async function removeLikedSong(songId: number) {
+    const verification = await verifyUserSession();
+    if (!verification.success) {
+        return verification;
+    }
+
+    const client = await getClient();
+    try{
+        const data = await client.request(DELETE_LIKED_SONG_MUTATION, { songId });
+
+        return { success: true , likedSongs: data.deleteLikedSong };
+    }
+    catch (error: any) {
+        console.error("Eroare GraphQL:", error.response?.errors);
+        return { success: false, message: "Eroare la stergerea melodiei." };
     }
 }

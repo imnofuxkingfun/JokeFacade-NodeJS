@@ -4,7 +4,7 @@ const Header = () => {
     const { user } = useAuth();
 
     return (
-        <header className="w-100">
+        <header className="w-full">
             <nav className="flex gap-4 p-4 border-b">
                 <a href="/">Home</a>
                 {user ? (

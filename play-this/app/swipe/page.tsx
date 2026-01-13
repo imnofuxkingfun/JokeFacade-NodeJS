@@ -13,7 +13,7 @@ export default function SwipePage() {
     const fetchSong = async () => {
         setLoading(true);
         const randomSong = await getRandomSong();
-        if(!randomSong){
+        if (!randomSong) {
             setSongsAvailable(false);
             setLoading(false);
             return;
@@ -32,35 +32,37 @@ export default function SwipePage() {
         fetchSong();
     }, []);
 
-    return(
-        <div>
-            <h1>Swipe Page</h1>
-            
-            {songsAvailable ? (loading ? (
-                <div>Loading...</div>
-            ) : song && (
-                <div>
-                    <h2>{song.name}</h2>
-                    <a href={song.spotifyLink} target="_blank" rel="noopener noreferrer">Listen on Spotify</a>
-                    <br />
-                    {loading ? (<></>) : (
-                        <div>
-                            <button onClick={fetchSong} disabled={loading} className="mt-4 bg-red-500 text-white p-2 rounded">
-                                {'Dislike Song'}
-                            </button>
-                            <button onClick={loveSongHandler} disabled={loading} className="mt-4 bg-green-500 text-white p-2 rounded">
-                                {'Love Song'}
-                            </button>
-                        </div>
-                    )}
-                    
-                    
-                </div>
-            )) : (
-                <div>
-                    <h2>No more songs available to swipe.</h2>
-                </div>
-            )}
+    return (
+        <div className=" h-full flex-1 flex items-center justify-center">
+            <div className="bg-gray-100 p-8 rounded shadow-lg text-center">
+                <h1 className="text-5xl">Swipe your songs</h1>
+
+                {songsAvailable ? (loading ? (
+                    <div>Loading...</div>
+                ) : song && (
+                    <div>
+                        <h2 className="text-xl">{song.name}</h2>
+                        <a href={song.spotifyLink} target="_blank" rel="noopener noreferrer">Listen on Spotify</a>
+                        <br />
+                        {loading ? (<></>) : (
+                            <div>
+                                <button onClick={fetchSong} disabled={loading} className="m-4 bg-red-500 text-white p-2 rounded">
+                                    {'Dislike Song'}
+                                </button>
+                                <button onClick={loveSongHandler} disabled={loading} className="m-4 bg-green-500 text-white p-2 rounded">
+                                    {'Love Song'}
+                                </button>
+                            </div>
+                        )}
+
+
+                    </div>
+                )) : (
+                    <div>
+                        <h2>No more songs available to swipe.</h2>
+                    </div>
+                )}
+            </div>
         </div>
     )
 }
