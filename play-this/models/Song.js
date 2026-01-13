@@ -12,32 +12,12 @@ export default (sequelize) => {
       allowNull: false
     },
     length: {
-      type: DataTypes.INTEGER,
+      type: DataTypes.FLOAT,
       allowNull: false
-    },
-    genre_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'genres',
-        key: 'id'
-      }
-    },
-    artist_id: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-      references: {
-        model: 'artists',
-        key: 'id'
-      }
     }
   }, {
     tableName: 'songs',
-    timestamps: false,
-    indexes: [
-      { fields: ['genre_id'] },
-      { fields: ['artist_id'] }
-    ]
+    timestamps: false
   });
 
   return Song;

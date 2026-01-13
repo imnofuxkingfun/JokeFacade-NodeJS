@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { User } from './database.js';
+import { User, Role } from './database.js';
 
 const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
 
@@ -15,7 +15,7 @@ export async function createContext({ req }) {
       const decoded = jwt.verify(token, JWT_SECRET);
       
       // Fetch user from database
-      user = await User.findByPk(decoded.id);
+      user = await User.findByPk(decoded.id, { include: { model: Role } });
       
       if (!user) {
         throw new Error('User not found');
@@ -29,6 +29,7 @@ export async function createContext({ req }) {
   return {
     user,
     JWT_SECRET,
+    isAdmin: user?.Role?.name === 'admin',
   };
 }
 
