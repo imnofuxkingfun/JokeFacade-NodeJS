@@ -7,7 +7,7 @@ const deleteBlogMutation = {
   args: {
     id: { type: new GraphQLNonNull(GraphQLInt) },
   },
-  async resolve(_, { id }) {
+  async resolve(_, { id }, context) {
     
     const blog = await Blog.findByPk(id);
     if (!blog) {

@@ -7,7 +7,7 @@ const deleteCommentMutation = {
   args: {
     id: { type: new GraphQLNonNull(GraphQLInt) },
   },
-  async resolve(_, { id }) {
+  async resolve(_, { id }, context) {
     const comment = await Comment.findByPk(id);
     if (!comment) {
       throw new Error('Comment not found');

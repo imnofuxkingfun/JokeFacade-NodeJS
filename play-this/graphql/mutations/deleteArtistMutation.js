@@ -7,7 +7,7 @@ const deleteArtistMutation = {
   args: {
     id: { type: new GraphQLNonNull(GraphQLInt) },
   },
-  async resolve(_, { id }) {
+  async resolve(_, { id }, context) {
 
     //only admin can delete artists
     if (!context.user || !context.isAdmin) {
