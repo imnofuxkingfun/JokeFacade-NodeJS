@@ -32,6 +32,7 @@ export default function SignupForm() {
           </div>
         )}
       </div>
+      {state?.message && <p className="text-red-500">{state.message}</p>}
 
       <button disabled={pending} type="submit" className="bg-blue-500 text-white p-2">
         {pending ? 'Se înregistrează...' : 'Creează cont'}

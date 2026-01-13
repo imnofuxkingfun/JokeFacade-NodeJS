@@ -14,11 +14,10 @@ const signupMutation = {
     password: { type: new GraphQLNonNull(GraphQLString) },
     role_id: { type: GraphQLInt, defaultValue: 2 }, // Default role_id to 2 (regular user)
   },
-  async resolve(_, args, context) {
+  resolve: async (_, args, context) => {
     const { email, username, password, role_id } = args;
     const { req, res, user, JWT_SECRET } = context;
 
-    // check if user is logged in by checking context user
     if (user) {
       throw new Error('You are already logged in');
     }
