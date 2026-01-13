@@ -14,8 +14,14 @@ const signupMutation = {
     password: { type: new GraphQLNonNull(GraphQLString) },
     role_id: { type: GraphQLInt, defaultValue: 2 }, // Default role_id to 2 (regular user)
   },
-  async resolve(_, args) {
+  async resolve(_, args, context) {
     const { email, username, password, role_id } = args;
+    const { req, res, user, JWT_SECRET } = context;
+
+    // check if user is logged in by checking context user
+    if (user) {
+      throw new Error('You are already logged in');
+    }
 
     const existing = await User.findOne({ where: { email } });
     if (existing) {
@@ -28,14 +34,14 @@ const signupMutation = {
 
 
     const passwordHash = await bcrypt.hash(password, 10);
-    const user = await User.create({ email, username, password: passwordHash, role_id}); // Default role_id to 2 (regular user)
+    const newUser = await User.create({ email, username, password: passwordHash, role_id}); // Default role_id to 2 (regular user)
 
-    const token = jwt.sign({ id: user.id, roleId: user.role_id }, JWT_SECRET, { expiresIn: '7d' });
+    const token = jwt.sign({ id: newUser.id, roleId: newUser.role_id }, JWT_SECRET, { expiresIn: '7d' });
 
-    //automatically create its profile as well, even if empty
-    await user.createProfile();    
+     //automatically create its profile as well, even if empty
+    await newUser.createProfile();    
 
-    return { token, user };
+    return { token, user: newUser };
   },
 };
 

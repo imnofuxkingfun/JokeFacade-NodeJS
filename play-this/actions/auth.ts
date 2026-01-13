@@ -1,0 +1,57 @@
+'use server'
+import { SignupFormSchema } from '@/lib/definitions'
+import { z } from 'zod';
+import { gql } from 'graphql-request';
+import { getClient } from '@/lib/graphql-client';
+import { cookies } from 'next/headers';
+
+const SIGNUP_MUTATION = gql`
+ mutation Signup($email: String!, $username: String!, $password: String!, $role_id: Int) {
+  signup(email: $email, username: $username, password: $password, role_id: $role_id) {
+    token
+    user {
+      id
+      username
+      email
+    }
+  }
+}
+`;
+
+export async function signup(prevState: unknown, formData: FormData) {
+  const validatedFields = SignupFormSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return { errors: z.treeifyError(validatedFields.error) };
+  }
+
+  const variables = {
+    email: validatedFields.data.email,
+    username: validatedFields.data.username,
+    password: validatedFields.data.password,
+    role_id: 1,
+  };
+
+  const client = await getClient()
+
+  try {
+    const data = await client.request(SIGNUP_MUTATION, variables);
+
+    const token = data.signup.token;
+    console.log("Răspuns server:", data);
+
+    const cookieStore = await cookies();
+        cookieStore.set('session_token', token, {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            maxAge: 60 * 60 * 24 * 7,
+        });
+
+    return { success: true };
+  } catch (error: any) {
+    console.error("Eroare GraphQL:", error.response?.errors);
+    return { message: error.response?.errors[0]?.message || "Eroare la înregistrare" };
+  }
+
+}
