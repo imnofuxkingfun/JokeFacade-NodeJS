@@ -2,8 +2,9 @@
 import { getClient } from "@/lib/graphql-client";
 import { gql } from "graphql-request";
 import { cookies } from "next/headers";
+import { success } from "zod";
 
-export interface SongInterface{
+export interface SongInterface {
     id: string;
     name: string;
     spotifyLink: string;
@@ -29,48 +30,81 @@ const LIKE_SONG_MUTATION = gql`
 }
 `;
 
-async function verifyUserSession(){
+const LIKED_SONGS_QUERY = gql`
+  query LikedSongs {
+    likedSongs{
+    id,
+    name,
+    spotifyLink
+  }
+}
+`;
+
+async function verifyUserSession() {
     const cookieStore = await cookies();
     const token = cookieStore.get('session_token')?.value;
 
     if (!token) {
-        return false;
+        console.error("Eroare: Utilizatorul nu este autentificat.");
+        return { success: false, message: "Utilizatorul nu este autentificat." }
     }
 
-    return true;
+    return { success: true };
 }
 
-export async function getRandomSong(){
-  if(!await verifyUserSession()){
-    return null;
-  }
+export async function getRandomSong() {
+    const verification = await verifyUserSession();
+    if (!verification.success) {
+        return verification;
+    }
 
-  const client = await getClient();
-  try{
-    const data = await client.request(RANDOM_SONG_QUERY);
-    return data.randomSong;
-  }
-  catch(error: any){
-    console.error("Eroare GraphQL:", error.response?.errors);
-    return null;
-  }
-}
-
-export async function likeSong(song: SongInterface){
-    if(!await verifyUserSession()){
+    const client = await getClient();
+    try {
+        const data = await client.request(RANDOM_SONG_QUERY);
+        return data.randomSong;
+    }
+    catch (error: any) {
+        console.error("Eroare GraphQL:", error.response?.errors);
         return null;
+    }
+}
+
+export async function likeSong(song: SongInterface) {
+    const verification = await verifyUserSession();
+    if (!verification.success) {
+        return verification;
     }
 
     const songId = song.id;
     const client = await getClient();
-    try{
+    try {
         const data = await client.request(LIKE_SONG_MUTATION, { songId: parseInt(songId) });
 
-        return { success: true};
+        return { success: true };
     }
-    catch(error: any){
+    catch (error: any) {
         console.error("Eroare GraphQL:", error.response?.errors);
-        return { success: false, message: "Eroare la salvarea melodiei."};
+        return { success: false, message: "Eroare la salvarea melodiei." };
     }
 
+}
+
+export async function getAllLikedSongs() {
+    const verification = await verifyUserSession();
+    if (!verification.success) {
+        return verification;
+    }
+
+    const client = await getClient();
+    try {
+        const data = await client.request(LIKED_SONGS_QUERY);
+
+        console.log("Liked songs:", data.likedSongs);
+
+        return data.likedSongs;
+    }
+    catch (error: any) {
+        console.error("Eroare GraphQL:", error.response?.errors);
+        return { success: false, message: "Eroare la salvarea melodiei." };
+    }
 }

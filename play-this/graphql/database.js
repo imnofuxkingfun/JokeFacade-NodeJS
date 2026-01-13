@@ -91,6 +91,10 @@ Song.belongsToMany(User, {
   onDelete: 'CASCADE'
 });
 
+// UserLikedSong <-> Song (Direct association)
+UserLikedSong.belongsTo(Song, { foreignKey: 'song_id', as: 'song' });
+Song.hasMany(UserLikedSong, { foreignKey: 'song_id' });
+
 // Blog <-> User
 Blog.belongsTo(User, { foreignKey: 'user_id', onDelete: 'CASCADE' });
 User.hasMany(Blog, { foreignKey: 'user_id' });
