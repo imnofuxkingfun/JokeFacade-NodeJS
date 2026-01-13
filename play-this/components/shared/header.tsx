@@ -18,7 +18,9 @@ const Header = () => {
                         <a href="/register">Register</a>
 
                     </>
-                )}
+                )
+                }
+                <a href="/blogs">Blogs</a>
             </nav>
         </header>
     )

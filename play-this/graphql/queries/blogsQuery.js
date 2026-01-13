@@ -7,6 +7,7 @@ const blogsQuery = {
     args: {},
     resolve: async () => {
         return await Blog.findAll({
+            order: [['date', 'DESC']],
             include: [
                 { model: User },
                 { model: Song },
