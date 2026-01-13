@@ -4,11 +4,11 @@ import { getClient } from '@/lib/graphql-client';
 
 type UserDisplay = { id: string; username: string };
 type Song = { id: string; name: string; length: number; spotifyLink?: string | null };
-type Comment = { id: string; user_id: number; blog_id: number; text: string; date: string };
+type Comment = { id: string; user_id: number; blog_id: number; text: string; date: Date };
 export type Blog = {
   id: number;
   text: string;
-  date: string;
+  date: Date;
   review?: number | null;
   user: UserDisplay;
   song?: Song | null;
@@ -29,7 +29,7 @@ const BLOGS_QUERY = gql`
   }
 `;
 
-export async function getAllBlogs(page = 1, limit = 10) {
+export async function getAllBlogs(page = 1, limit = 5) {
   const client = await getClient();
   const data = await client.request<{ blogs: Blog[] }>(BLOGS_QUERY);
 

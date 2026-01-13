@@ -6,8 +6,9 @@ type PageProps = {
 };
 
 export default async function BlogsPage({ searchParams }: PageProps) {
-  const page = Number(searchParams?.page ?? '1');
-  const limit = Number(searchParams?.limit ?? '10');
+  const params = (await searchParams) ?? {};
+  const page = Number(params.page ?? '1');
+  const limit = Number(params.limit ?? '7');
 
   const { items, hasPrev, hasNext, pageCount, total } = await getAllBlogs(page, limit);
 
@@ -49,7 +50,7 @@ export default async function BlogsPage({ searchParams }: PageProps) {
               <summary>Comments ({b.comments?.length ?? 0})</summary>
               <ul style={{ marginTop: 8, display: 'grid', gap: 8 }}>
                 {b.comments?.map((c) => (
-                  <li key={c.id} style={{ background: '#fafafa', padding: 8, borderRadius: 6 }}>
+                  <li key={c.id} style={{ background: '#323b64', padding: 8, borderRadius: 6 }}>
                     <div style={{ fontSize: 12, color: '#777', marginBottom: 4 }}>
                       {new Date(c.date).toLocaleString()} • user #{c.user_id}
                     </div>

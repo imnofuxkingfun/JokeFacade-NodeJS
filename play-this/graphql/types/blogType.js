@@ -13,7 +13,11 @@ const blogTypes = new GraphQLObjectType({
             resolve: (parent) => parent.User
         },
         text: { type: GraphQLString },
-        date: { type: GraphQLString },
+        date: {
+            type: GraphQLString,
+            resolve: (parent) =>
+                parent.date ? new Date(parent.date).toISOString() : null
+            },
         review: { type: GraphQLInt },
         song: { 
             type: songType,

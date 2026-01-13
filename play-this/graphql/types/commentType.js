@@ -7,7 +7,11 @@ const commentType = new GraphQLObjectType({
         user_id: { type: GraphQLInt },
         blog_id: { type: GraphQLInt },
         text: { type: GraphQLString },
-        date: { type: GraphQLString },
+        date: {
+            type: GraphQLString,
+            resolve: (parent) =>
+                parent.date ? new Date(parent.date).toISOString() : null
+            },
     }),
 });
 
