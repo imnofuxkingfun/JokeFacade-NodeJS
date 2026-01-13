@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSessionUser } from '@/actions/auth';
 
-const protectedRoutes = ['/test'];
+const protectedRoutes = ['/swipe', '/profile'];
 const authRoutes = ['/login', '/register'];
 
 export default async function middleware(request: NextRequest) {
