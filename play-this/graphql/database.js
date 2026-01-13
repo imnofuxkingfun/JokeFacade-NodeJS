@@ -39,13 +39,13 @@ Profile.belongsTo(User, { foreignKey: 'id' });
 
 // Song <-> Genre (Many-to-Many)
 Song.belongsToMany(Genre, { 
-  through: 'SongGenres',
+  through: 'songGenres',
   foreignKey: 'song_id',
   otherKey: 'genre_id',
   onDelete: 'CASCADE'
 });
 Genre.belongsToMany(Song, { 
-  through: 'SongGenres',
+  through: 'songGenres',
   foreignKey: 'genre_id',
   otherKey: 'song_id',
   onDelete: 'CASCADE'
@@ -65,17 +65,18 @@ Genre.belongsTo(Genre, {
 
 // Song <-> Artist (Many-to-Many)
 Song.belongsToMany(Artist, { 
-  through: 'SongArtists',
+  through: 'songArtists',
   foreignKey: 'song_id',
   otherKey: 'artist_id',
   onDelete: 'CASCADE'
 });
 Artist.belongsToMany(Song, { 
-  through: 'SongArtists',
+  through: 'songArtists',
   foreignKey: 'artist_id',
   otherKey: 'song_id',
   onDelete: 'CASCADE'
 });
+
 
 // User <-> Song (Many-to-Many through UserLikedSong)
 User.belongsToMany(Song, { 
