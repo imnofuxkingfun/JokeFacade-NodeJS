@@ -4,6 +4,7 @@ import rolesQuery from './queries/rolesQuery.js';
 import artistQuery from './queries/artistQuery.js';
 import artistsQuery from './queries/artistsQuery.js';
 import songQuery from './queries/songQuery.js';
+import randomSongQuery from './queries/randomSongQuery.js';
 import songsQuery from './queries/songsQuery.js';
 import userLikedSongsQuery from './queries/userLikedSongsQuery.js';
 import userQuery from './queries/userQuery.js';
@@ -47,6 +48,7 @@ const RootQuery = new GraphQLObjectType({
     artists: artistsQuery,
     song: songQuery,
     songs: songsQuery,
+    randomSong: randomSongQuery,
     likedSongs: userLikedSongsQuery,
     user: userQuery,
     users: usersQuery,
