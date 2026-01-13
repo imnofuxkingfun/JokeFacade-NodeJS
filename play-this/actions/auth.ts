@@ -1,5 +1,5 @@
 'use server'
-import { SignupFormSchema } from '@/lib/definitions'
+import { LoginFormSchema, SignupFormSchema } from '@/lib/definitions'
 import { z } from 'zod';
 import { gql } from 'graphql-request';
 import { getClient } from '@/lib/graphql-client';
@@ -17,6 +17,53 @@ const SIGNUP_MUTATION = gql`
   }
 }
 `;
+
+const LOGIN_MUTATION = gql`
+  mutation Login($email: String!, $password: String!) {
+  login(email: $email, password: $password) {
+    token
+    user {
+      id
+      username
+      email
+    }
+  }
+}
+`;
+
+export async function login(prevState: unknown, formData: FormData) {
+  const validatedFields = LoginFormSchema.safeParse(Object.fromEntries(formData.entries()));
+
+  if (!validatedFields.success) {
+    return { errors: z.treeifyError(validatedFields.error) };
+  }
+  const variables = {
+    email: validatedFields.data.email,
+    password: validatedFields.data.password
+  };
+
+  const client = await getClient();
+
+  try {
+    const data = await client.request(LOGIN_MUTATION, variables);
+
+    const token = data.login.token;
+    console.log("Răspuns server:", data);
+
+    const cookieStore = await cookies();
+        cookieStore.set('session_token', token, {
+            httpOnly: true,
+            sameSite: 'lax',
+            path: '/',
+            maxAge: 60 * 60 * 24 * 7,
+        });
+
+    return { success: true, user: data.login.user };
+  } catch (error: any) {
+    console.error("Eroare GraphQL:", error.response?.errors);
+    return { message: error.response?.errors[0]?.message || "Eroare la înregistrare" };
+  }
+};
 
 export async function signup(prevState: unknown, formData: FormData) {
   const validatedFields = SignupFormSchema.safeParse(Object.fromEntries(formData.entries()));
@@ -48,7 +95,7 @@ export async function signup(prevState: unknown, formData: FormData) {
             maxAge: 60 * 60 * 24 * 7,
         });
 
-    return { success: true };
+    return { success: true, user: data.signup.user };
   } catch (error: any) {
     console.error("Eroare GraphQL:", error.response?.errors);
     return { message: error.response?.errors[0]?.message || "Eroare la înregistrare" };

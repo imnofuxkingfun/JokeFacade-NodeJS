@@ -1,10 +1,23 @@
 // app/signup/page.tsx
 'use client'
-import { useActionState } from 'react';
+import { useActionState, useEffect } from 'react';
 import { signup } from '@/actions/auth';
+import { useRouter } from 'next/dist/client/components/navigation';
+import { useAuth } from '@/context/authContext';
 
 export default function SignupForm() {
   const [state, action, pending] = useActionState(signup, undefined);
+
+  const { login: updateAuthContext } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (state?.success && state?.user) {
+      updateAuthContext(state.user);
+      
+      router.push('/');
+    }
+  }, [state]);
 
   return (
     <form action={action} className="flex flex-col gap-4 w-80">
