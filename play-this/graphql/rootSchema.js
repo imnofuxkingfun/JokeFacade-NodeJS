@@ -8,6 +8,8 @@ import songsQuery from './queries/songsQuery.js';
 import userLikedSongsQuery from './queries/userLikedSongsQuery.js';
 import userQuery from './queries/userQuery.js';
 import usersQuery from './queries/usersQuery.js';
+import sessionUserQuery from './queries/sessionUserQuery.js';
+
 import blogQuery from './queries/blogQuery.js';
 import blogsQuery from './queries/blogsQuery.js';
 
@@ -48,6 +50,7 @@ const RootQuery = new GraphQLObjectType({
     likedSongs: userLikedSongsQuery,
     user: userQuery,
     users: usersQuery,
+    sessionUser: sessionUserQuery,
     blog: blogQuery,
     blogs: blogsQuery,
   }

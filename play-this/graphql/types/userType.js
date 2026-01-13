@@ -9,7 +9,7 @@ const UserType = new GraphQLObjectType({
     username: { type: GraphQLString },
     role: { 
       type: RoleType,
-      resolve: (parent) => parent.Role  
+      resolve: (parent) => parent.Role
     },
   })
 });

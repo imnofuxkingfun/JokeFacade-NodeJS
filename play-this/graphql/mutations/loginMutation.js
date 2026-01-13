@@ -4,7 +4,7 @@ import { GraphQLNonNull, GraphQLString } from 'graphql';
 import { User } from '../database.js';
 import AuthPayloadType from '../types/authPayloadType.js';
 
-const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET;
 
 const loginMutation = {
   type: AuthPayloadType,
