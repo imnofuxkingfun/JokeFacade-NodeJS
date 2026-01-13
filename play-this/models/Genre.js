@@ -11,6 +11,14 @@ export default (sequelize) => {
       type: DataTypes.STRING(100),
       allowNull: false,
       unique: true
+    },
+    parent_genre_id: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+      references: {
+        model: 'genres',
+        key: 'id'
+      }
     }
   }, {
     tableName: 'genres',

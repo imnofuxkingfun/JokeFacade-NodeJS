@@ -5,10 +5,11 @@ import { UserLikedSong } from '../database.js';
 const userLikedSongsQuery = {
     type: userLikedSongsType,
     args: {
-        userId: { type: new GraphQLNonNull(GraphQLID) }
+        userId: { type: GraphQLID }
     },
-    resolve: async (parent, args) => {
-        return await UserLikedSong.findAll({ where: { id_user: args.userId } });
+    resolve: async (parent, args, context) => {
+        const id = args.userId || context.user.id_user; //if userId isnt provided, get user from jwt context
+        return await UserLikedSong.findAll({ where: { id_user: id } });
     }
 }
 

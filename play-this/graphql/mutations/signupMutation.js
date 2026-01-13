@@ -37,6 +37,10 @@ const signupMutation = {
     const newUser = await User.create({ email, username, password: passwordHash, role_id}); // Default role_id to 2 (regular user)
 
     const token = jwt.sign({ id: newUser.id, roleId: newUser.role_id }, JWT_SECRET, { expiresIn: '7d' });
+
+     //automatically create its profile as well, even if empty
+    await newUser.createProfile();    
+
     return { token, user: newUser };
   },
 };

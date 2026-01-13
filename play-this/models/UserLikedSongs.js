@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 
 export default (sequelize) => {
   const UserLikedSong = sequelize.define('UserLikedSong', {
-    id_user: {
+    user_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
@@ -11,7 +11,7 @@ export default (sequelize) => {
         key: 'id'
       }
     },
-    id_song: {
+    song_id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
