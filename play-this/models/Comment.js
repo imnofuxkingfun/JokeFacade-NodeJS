@@ -7,7 +7,7 @@ export default (sequelize) => {
       primaryKey: true,
       autoIncrement: true
     },
-    id_user: {
+    user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -15,7 +15,7 @@ export default (sequelize) => {
         key: 'id'
       }
     },
-    id_blog: {
+    blog_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -35,8 +35,8 @@ export default (sequelize) => {
     tableName: 'comments',
     timestamps: false,
     indexes: [
-      { fields: ['id_user'] },
-      { fields: ['id_blog'] },
+      { fields: ['user_id'] },
+      { fields: ['blog_id'] },
       { fields: ['date'] }
     ]
   });
