@@ -8,10 +8,16 @@ import { useState, useEffect } from "react";
 export default function SwipePage() {
     const [song, setSong] = useState<SongInterface | null>(null);
     const [loading, setLoading] = useState(true);
+    const [songsAvailable, setSongsAvailable] = useState(true);
 
     const fetchSong = async () => {
         setLoading(true);
         const randomSong = await getRandomSong();
+        if(!randomSong){
+            setSongsAvailable(false);
+            setLoading(false);
+            return;
+        }
         setSong(randomSong);
         setLoading(false);
     };
@@ -29,7 +35,8 @@ export default function SwipePage() {
     return(
         <div>
             <h1>Swipe Page</h1>
-            {loading ? (
+            
+            {songsAvailable ? (loading ? (
                 <div>Loading...</div>
             ) : song && (
                 <div>
@@ -48,6 +55,10 @@ export default function SwipePage() {
                     )}
                     
                     
+                </div>
+            )) : (
+                <div>
+                    <h2>No more songs available to swipe.</h2>
                 </div>
             )}
         </div>
