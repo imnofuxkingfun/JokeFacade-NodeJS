@@ -31,6 +31,35 @@ const LOGIN_MUTATION = gql`
 }
 `;
 
+const SESSION_USER_QUERY = gql`
+  query SessionUser {
+    sessionUser {
+      id
+      username
+      email
+    }
+  }
+`;
+
+export async function getSessionUser(){
+  const cookieStore = await cookies();
+  const token = cookieStore.get('session_token')?.value;
+
+  if (!token) {
+    return null;
+  }
+
+  const client = await getClient();
+  try{
+    const data = await client.request(SESSION_USER_QUERY);
+    return data.sessionUser;
+  }
+  catch(error: any){
+    console.error("Eroare GraphQL:", error.response?.errors);
+    return null;
+  }
+}
+
 export async function login(prevState: unknown, formData: FormData) {
   const validatedFields = LoginFormSchema.safeParse(Object.fromEntries(formData.entries()));
 

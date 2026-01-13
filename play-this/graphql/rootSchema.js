@@ -11,6 +11,7 @@ import userLikedSongsQuery from './queries/userLikedSongsQuery.js';
 import signupMutation from './mutations/signupMutation.js';
 import loginMutation from './mutations/loginMutation.js'
 import usersQuery from './queries/usersQuery.js';
+import sessionUserQuery from './queries/sessionUserQuery.js';
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -23,6 +24,7 @@ const RootQuery = new GraphQLObjectType({
     songs: songsQuery,
     likedSongs: userLikedSongsQuery,
     users: usersQuery,
+    sessionUser: sessionUserQuery
   }
 });
 
