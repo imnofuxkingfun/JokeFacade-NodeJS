@@ -7,6 +7,7 @@ const songInputType = new GraphQLInputObjectType({
     length: { type: new GraphQLNonNull(GraphQLFloat) },
     genre_ids: { type: new GraphQLList(GraphQLInt) },
     artist_ids: { type: new GraphQLList(GraphQLInt) },
+    spotifyLink: { type: GraphQLString },
   })
 });
 

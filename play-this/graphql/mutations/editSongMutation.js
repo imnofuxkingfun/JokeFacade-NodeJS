@@ -24,6 +24,7 @@ const editSongMutation = {
     await song.update({
       name: input.name,
       length: input.length,
+      spotifyLink: input.spotifyLink
     });
     
     if (input.genre_ids && input.genre_ids.length > 0) {

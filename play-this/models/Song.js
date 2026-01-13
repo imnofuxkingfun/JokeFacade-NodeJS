@@ -14,6 +14,10 @@ export default (sequelize) => {
     length: {
       type: DataTypes.FLOAT,
       allowNull: false
+    },
+    spotifyLink: {
+      type: DataTypes.STRING(255),
+      allowNull: false
     }
   }, {
     tableName: 'songs',

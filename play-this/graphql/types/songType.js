@@ -5,7 +5,8 @@ const songType = new GraphQLObjectType({
     fields: () => ({
         id: { type: GraphQLID },
         name: { type: GraphQLString },
-        length: { type: GraphQLFloat}
+        length: { type: GraphQLFloat},
+        spotifyLink: { type: GraphQLString },
     })
 });
 
