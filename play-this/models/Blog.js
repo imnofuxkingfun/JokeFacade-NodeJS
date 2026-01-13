@@ -7,7 +7,7 @@ export default (sequelize) => {
       primaryKey: true,
       autoIncrement: true
     },
-    id_user: {
+    user_id: {
       type: DataTypes.INTEGER,
       allowNull: false,
       references: {
@@ -43,7 +43,7 @@ export default (sequelize) => {
     tableName: 'blogs',
     timestamps: false,
     indexes: [
-      { fields: ['id_user'] },
+      { fields: ['user_id'] },
       { fields: ['song_id'] },
       { fields: ['date'] }
     ]

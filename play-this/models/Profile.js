@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 
 export default (sequelize) => {
   const Profile = sequelize.define('Profile', {
-    id_user: {
+    id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       references: {
