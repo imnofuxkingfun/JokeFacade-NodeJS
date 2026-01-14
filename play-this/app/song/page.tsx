@@ -343,8 +343,9 @@ const handleDeleteBlog = async (blogId: string) => {
                                         <span className={styles.blogAuthor}>{blog.user.username}</span>
                                         <span className={styles.blogDate}>{new Date(blog.date).toLocaleDateString()}</span>
                                         <span className={styles.blogReview}>★ {blog.review}/10</span>
-                                        {user && user.id === String(blog.user.id) && !editingBlog[blog.id] && (
+                                        {user && (user.id === String(blog.user.id) || user?.role?.id === '1') && !editingBlog[blog.id] && (
                                             <div className={styles.commentActions}>
+                                                {user.id === String(blog.user.id) && (
                                                 <button
                                                     onClick={() => {
                                                         setEditingBlog({ ...editingBlog, [blog.id]: true });
@@ -356,6 +357,7 @@ const handleDeleteBlog = async (blogId: string) => {
                                                 >
                                                     ✏️
                                                 </button>
+                                                )}
                                                 <button
                                                     onClick={() => handleDeleteBlog(String(blog.id))}
                                                     className={styles.deleteCommentBtn}
@@ -421,9 +423,9 @@ const handleDeleteBlog = async (blogId: string) => {
                                                             <>
                                                                 <div className={styles.commentHeader}>
                                                                     <p className={styles.commentText}>{comment.text}</p>
-                                                                    {user && user.id === String(comment.user.id) && (
+                                                                    {user && (user.id === String(comment.user.id) || user?.role?.id === '1') && (
                                                                         <div className={styles.commentActions}>
-                                                                            <button
+                                                                            {user.id === String(comment.user.id) && (<button
                                                                                 onClick={() => {
                                                                                     setEditingComment({ ...editingComment, [comment.id]: true });
                                                                                     setEditCommentText({ ...editCommentText, [comment.id]: comment.text });
@@ -432,7 +434,7 @@ const handleDeleteBlog = async (blogId: string) => {
                                                                                 title="Edit comment"
                                                                             >
                                                                                 ✏️
-                                                                            </button>
+                                                                            </button>)}
                                                                             <button
                                                                                 onClick={() => handleDeleteComment(comment.id)}
                                                                                 className={styles.deleteCommentBtn}

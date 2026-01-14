@@ -195,9 +195,9 @@ const handleDeleteBlog = async (blogId: string) => {
               <strong>@{b.user?.username}</strong>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <span style={{ color: '#888' }}>{new Date(b.date).toLocaleDateString()}</span>
-                {user && user.id === String(b.user.id) && !editingBlog[b.id] && (
+                {user && (user.id === String(b.user.id) || user?.role?.id === '1') && !editingBlog[b.id] && (
                   <div style={{ display: 'flex', gap: 4 }}>
-                    <button
+                    {user.id === String(b.user.id) && (<button
                       onClick={() => {
                         setEditingBlog({ ...editingBlog, [b.id]: true });
                         setEditBlogText({ ...editBlogText, [b.id]: b.text });
@@ -207,7 +207,7 @@ const handleDeleteBlog = async (blogId: string) => {
                       title="Edit blog"
                     >
                       ✏️
-                    </button>
+                    </button>)}
                     <button
                       onClick={() => handleDeleteBlog(String(b.id))}
                       disabled={deletingBlog[b.id]}
@@ -302,9 +302,9 @@ const handleDeleteBlog = async (blogId: string) => {
                             </div>
                             <div>{c.text}</div>
                           </div>
-                          {user && user.id === String(c.user.id) && (
+                          {user && (user.id === String(c.user.id) || user?.role?.id === '1') && (
                             <div style={{ display: 'flex', gap: 4, marginLeft: 8 }}>
-                              <button
+                              {user.id === String(c.user.id) && (<button
                                 onClick={() => {
                                   setEditingComment({ ...editingComment, [c.id]: true });
                                   setEditCommentText({ ...editCommentText, [c.id]: c.text });
@@ -320,7 +320,7 @@ const handleDeleteBlog = async (blogId: string) => {
                                 title="Edit comment"
                               >
                                 ✏️
-                              </button>
+                              </button>)}
                               <button
                                 onClick={() => handleDeleteComment(c.id)}
                                 disabled={deletingComment[c.id]}
