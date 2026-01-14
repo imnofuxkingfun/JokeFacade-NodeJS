@@ -25,8 +25,8 @@ module.exports = {
   ];
 
   const users = [
-    { id: 1, email: 'luca@admin.com', username: 'imnofuxkingfun', password: passwordHash, role_id: 2 },
-    { id: 2, email: 'mihai@admin.com', username: 'mihaidanaila', password: passwordHash, role_id: 2 },
+    { id: 1, email: 'luca@admin.com', username: 'imnofuxkingfun', password: passwordHash, role_id: 1 },
+    { id: 2, email: 'mihai@admin.com', username: 'mihaidanaila', password: passwordHash, role_id: 1 },
     { id: 3, email: 'dick.grayson@gotham.com', username: 'dickgrayson', password: passwordHash, role_id: 2 },
     { id: 4, email: 'barbara.gordon@gcpd.com', username: 'barbaragordon', password: passwordHash, role_id: 2 },
     { id: 5, email: 'jason.todd@outlaws.com', username: 'jasontodd', password: passwordHash, role_id: 2 },

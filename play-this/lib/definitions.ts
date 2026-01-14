@@ -25,4 +25,12 @@ export const NewArtistSchema = z.object({
   name: z.string().min(1, { message: 'Artist name must be at least 1 character long.' }).trim(),
   description: z.string().min(10, { message: 'Description must be at least 10 characters long.' }).trim(),
 });
+
+export const NewSongSchema = z.object({
+  name: z.string().min(1, { message: 'Song name must be at least 1 character long.' }).trim(),
+  length: z.string().min(1, { message: 'Song length must be provided.' }).trim(),
+  genreId: z.string().regex(/^\d+$/, { message: 'Genre ID must be a valid number.' }).transform(Number).refine((val) => val > 0, { message: 'Genre ID must be a positive integer.' }),
+  artistId: z.string().regex(/^\d+$/, { message: 'Artist ID must be a valid number.' }).transform(Number).refine((val) => val > 0, { message: 'Artist ID must be a positive integer.' }),
+  spotifyLink: z.url({ message: 'Please enter a valid URL for the Spotify link.'  }).trim(),
+});
     

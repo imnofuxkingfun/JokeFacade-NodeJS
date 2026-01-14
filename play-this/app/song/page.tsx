@@ -2,7 +2,7 @@
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import SongEmbedded from '@/components/shared/song';
-import { getSongDisplay, SongDisplayInterface } from '@/actions/songs';
+import { deleteSong, getSongDisplay, SongDisplayInterface } from '@/actions/songs';
 import { createBlog } from '@/actions/blog';
 import { useAuth } from '@/context/authContext';
 import styles from './song.module.css';
@@ -81,8 +81,26 @@ export default function SongDisplayPage() {
         setCurrentBlogPage((prev) => Math.min(prev + 1, totalPages));
     };
 
+    const handleDelete = async () => {
+        if(await deleteSong(parseInt(songId!))){
+            window.location.href = '/songs';
+            return;
+        }
+    }
+
     return (
         <div className={styles.container}>
+            {user?.role?.id === '1' && (
+                <a href={`/song/edit/${songId}`}>
+                    <button className="mb-4 bg-green-500 text-white p-2 rounded">
+                        Edit Artist
+                    </button>
+
+                    <button onClick={handleDelete} className="mb-4 bg-red-500 text-white p-2 rounded">
+                        Delete Artist
+                    </button>
+                </a>
+            )}
             <h1>{song.name}</h1>
 
             {/* Spotify Embed */}
