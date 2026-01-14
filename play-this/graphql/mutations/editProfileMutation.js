@@ -11,14 +11,16 @@ const editProfileMutation = {
   },
   async resolve(_, { id, input }, context) {
 
-    //only owners   can edit profiles
-    if (!context.user || (context.user.id !== id)) {
-        throw new Error('Unauthorized: only owners can edit profiles');
-    }
     const profile = await Profile.findByPk(id);
     if (!profile) {
       throw new Error('Profile not found');
     }
+
+    //only owners   can edit profiles
+    if (!context.user || (context.user.id !== id)) {
+        throw new Error('Unauthorized: only owners can edit profiles');
+    }
+   
     
     await profile.update(input);
     return profile;

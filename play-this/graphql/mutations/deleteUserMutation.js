@@ -8,15 +8,15 @@ const deleteUserMutation = {
     id: { type: new GraphQLNonNull(GraphQLInt) },
   },
   async resolve(_, { id }, context) {
-
-    //only admin or owner can delete users
-    if (!context.user || (context.user.id !== id && !context.isAdmin)) {
-        throw new Error('Unauthorized: only admins or owners can delete users');
-    }
     const user = await User.findByPk(id);
     if (!user) {
       throw new Error('User not found');
     }
+    //only admin or owner can delete users
+    if (!context.user || (context.user.id !== id && !context.isAdmin)) {
+        throw new Error('Unauthorized: only admins or owners can delete users');
+    }
+    
     await user.destroy();
     return user;
   },

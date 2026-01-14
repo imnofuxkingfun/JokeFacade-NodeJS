@@ -10,16 +10,17 @@ const editUserMutation = {
     input: { type: new GraphQLNonNull(userInputType) },
   },
   async resolve(_, { id, input }, context) {
-
-    //only owners can edit users
-    if (!context.user || (context.user.id !== id)) {
-        throw new Error('Unauthorized: can only edit your own profile');
-    }
-
     const user = await User.findByPk(id);
     if (!user) {
       throw new Error('User not found');
     }
+
+        //only owners can edit users
+    if (!context.user || (context.user.id !== id)) {
+        throw new Error('Unauthorized: can only edit your own profile');
+    }
+
+   
     
     // Check if user is editing themselves
     if (user.id !== context.user?.id) {

@@ -8,14 +8,15 @@ const addLikedSongMutation = {
         songId: { type: GraphQLID},
     },
     resolve: async (_, { songId }, context) => {
-        const user = context.user;
-        if (!user) {
-            throw new Error('Unauthorized: you must be logged in to like a song');
-        }
 
         const song = await Song.findByPk(songId);
         if (!song) {
             throw new Error('Song not found');
+        }
+
+        const user = context.user;
+        if (!user) {
+            throw new Error('Unauthorized: you must be logged in to like a song');
         }
 
         console.log("user id:", user.id);

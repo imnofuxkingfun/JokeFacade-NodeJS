@@ -11,14 +11,16 @@ const editArtistMutation = {
   },
   async resolve(_, { id, input }, context) {
 
-    //only admin can edit artists
-    if (!context.user || !context.isAdmin) {
-        throw new Error('Unauthorized: only admins can edit artists');
-    }
     const artist = await Artist.findByPk(id);
     if (!artist) {
       throw new Error('Artist not found');
     }
+    
+    //only admin can edit artists
+    if (!context.user || !context.isAdmin) {
+        throw new Error('Unauthorized: only admins can edit artists');
+    }
+    
     
     await artist.update(input);
     return artist;

@@ -8,16 +8,18 @@ const deleteGenreMutation = {
     id: { type: new GraphQLNonNull(GraphQLInt) },
   },
   async resolve(_, { id }, context) {
+    const genre = await Genre.findByPk(id);
+    if (!genre) {
+      throw new Error('Genre not found');
+    }
 
+    
     //only admin can delete genres
     if (!context.user || !context.isAdmin) {
         throw new Error('Unauthorized: only admins can delete genres');
     }
 
-    const genre = await Genre.findByPk(id);
-    if (!genre) {
-      throw new Error('Genre not found');
-    }
+    
     await genre.destroy();
     return genre;
   },

@@ -8,16 +8,16 @@ const deleteRoleMutation = {
     id: { type: new GraphQLNonNull(GraphQLInt) },
   },
   async resolve(_, { id }, context) {
-
+    const role = await Role.findByPk(id);
+    if (!role) {
+      throw new Error('Role not found');
+    }
     //only admin can delete roles
     if (!context.user || !context.isAdmin) {
         throw new Error('Unauthorized: only admins can delete roles');
     }
 
-    const role = await Role.findByPk(id);
-    if (!role) {
-      throw new Error('Role not found');
-    }
+    
     await role.destroy();
     return role;
   },

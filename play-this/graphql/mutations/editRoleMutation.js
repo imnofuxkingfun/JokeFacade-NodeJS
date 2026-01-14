@@ -11,13 +11,14 @@ const editRoleMutation = {
   },
   async resolve(_, { id, input }, context) {
 
-    //only admin can edit roles
-    if (!context.user || !context.isAdmin) {
-        throw new Error('Unauthorized: only admins can edit roles');
-    }
     const role = await Role.findByPk(id);
     if (!role) {
       throw new Error('Role not found');
+    }
+
+    //only admin can edit roles
+    if (!context.user || !context.isAdmin) {
+        throw new Error('Unauthorized: only admins can edit roles');
     }
     
     await role.update(input);

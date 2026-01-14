@@ -8,7 +8,7 @@ const deleteLikedSongMutation = {
         songId: { type: GraphQLID},
     },
     resolve: async (_, { songId }, context) => {
-        //only admin can delete songs
+    // must be logged in
     if (!context.user) {
         throw new Error('Unauthorized: you must be logged in to unlike a song');
     }
@@ -19,10 +19,11 @@ const deleteLikedSongMutation = {
             song_id: songId
         }
     });
-
+    
     if (!song) {
       throw new Error('Song not found');
     }
+
     await song.destroy();
 
     const likedSongs = await UserLikedSong.findAll({
