@@ -230,10 +230,10 @@ const SONG_DISPLAY_QUERY = gql`
 `;
 
 export async function getSongDisplay(id: string) {
-    const verification = await verifyUserSession();
-    if (!verification.success) {
-        return null;
-    }
+    // const verification = await verifyUserSession();
+    // if (!verification.success) {
+    //     return null;
+    // }
 
     const client = await getClient();
     try {
@@ -264,10 +264,10 @@ export async function removeLikedSong(songId: number) {
 }
 
 export async function getArtistSongs(artistId: number) {
-    const verification = await verifyUserSession();
-    if (!verification.success) {
-        return verification;
-    }
+    // const verification = await verifyUserSession();
+    // if (!verification.success) {
+    //     return verification;
+    // }
 
     const client = await getClient();
 
@@ -309,10 +309,10 @@ const ARTISTS_QUERY = gql`
 `;
 
 export async function getAllArtists() {
-    const verification = await verifyUserSession();
-    if (!verification.success) {
-        return null;
-    }
+    // const verification = await verifyUserSession();
+    // if (!verification.success) {
+    //     return null;
+    // }
 
     const client = await getClient();
     try {
@@ -337,10 +337,10 @@ const SONGS_QUERY = gql`
 `;
 
 export async function getAllSongs() {
-    const verification = await verifyUserSession();
-    if (!verification.success) {
-        return null;
-    }
+    // const verification = await verifyUserSession();
+    // if (!verification.success) {
+    //     return null;
+    // }
 
     const client = await getClient();
     try {
@@ -369,10 +369,10 @@ const GENRES_QUERY = gql`
 `;
 
 export async function getAllGenres() {
-    const verification = await verifyUserSession();
-    if (!verification.success) {
-        return null;
-    }
+    // const verification = await verifyUserSession();
+    // if (!verification.success) {
+    //     return null;
+    // }
 
     const client = await getClient();
     try {
@@ -413,10 +413,10 @@ const GENRE_DISPLAY_QUERY = gql`
 `;
 
 export async function getGenreDisplay(id: string) {
-    const verification = await verifyUserSession();
-    if (!verification.success) {
-        return null;
-    }
+    // const verification = await verifyUserSession();
+    // if (!verification.success) {
+    //     return null;
+    // }
 
     const client = await getClient();
     try {
