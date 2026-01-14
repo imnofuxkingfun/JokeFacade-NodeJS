@@ -33,7 +33,7 @@ export async function createContext({ req, res }) {
     res,
     user,
     JWT_SECRET,
-    isAdmin: user?.role_id === 2,
+    isAdmin: user?.role_id === 1,
   };
 }
 

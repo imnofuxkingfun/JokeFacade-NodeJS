@@ -3,12 +3,15 @@
 import { useEffect, useState } from 'react';
 import { getAllSongs, SongInterface } from '@/actions/songs';
 import styles from '../song/song.module.css';
+import { useAuth } from '@/context/authContext';
 
 export default function SongsPage() {
     const [songs, setSongs] = useState<SongInterface[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const songsPerPage = 12;
+
+    const { user } = useAuth();
 
     useEffect(() => {
         async function fetchSongs() {
@@ -42,6 +45,14 @@ export default function SongsPage() {
     return (
         <div className={styles.container}>
             <h1>Songs</h1>
+
+            {user?.role?.id === '1' && (
+                <a href="/songs/new">
+                    <button className="mb-4 bg-green-500 text-white p-2 rounded">
+                        Add New Song
+                    </button>
+                </a>
+            )}
             
             <div className={styles.artistsGrid}>
                 {displayedSongs.map((song) => (

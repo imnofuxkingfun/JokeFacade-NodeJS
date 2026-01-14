@@ -4,7 +4,7 @@
     "password": "record44LABEL",
     "database": "playThis",
     "host": "localhost",
-    "port": 7447,
+    "port": 5432,
     "dialect": "postgres"
   },
   "test": {
@@ -12,7 +12,7 @@
     "password": "record44LABEL",
     "database": "playThis",
     "host": "localhost",
-    "port": 7447,
+    "port": 5432,
     "dialect": "postgres"
   },
   "production": {
@@ -20,7 +20,7 @@
     "password": "record44LABEL",
     "database": "playThis",
     "host": "localhost",
-    "port": 7447,
+    "port": 5432,
     "dialect": "postgres"
   }
 }
