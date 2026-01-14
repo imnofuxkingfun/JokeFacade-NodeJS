@@ -229,11 +229,11 @@ const handleDeleteBlog = async (blogId: string) => {
             {user?.role?.id === '1' && (
                 <a href={`/song/edit/${songId}`}>
                     <button className="mb-4 bg-green-500 text-white p-2 rounded">
-                        Edit Artist
+                        Edit Song
                     </button>
 
                     <button onClick={handleDelete} className="mb-4 bg-red-500 text-white p-2 rounded">
-                        Delete Artist
+                        Delete Song
                     </button>
                 </a>
             )}

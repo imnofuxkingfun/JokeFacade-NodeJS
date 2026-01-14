@@ -535,3 +535,28 @@ export async function deleteSong(songId: number) {
         return { success: false, message: "Eroare la stergerea melodiei." };
     }
 }
+
+export async function createGenreMutation(name: string, parentId?: number) {
+    const verification = await verifyUserSession();
+    if (!verification.success) {
+        return verification;
+    }
+
+    const CREATE_GENRE_MUTATION = gql`
+    mutation CreateGenre($name: String!, $parentId: ID) {
+      createGenre(name: $name, parentId: $parentId) {
+        id
+        name
+    }
+}    `;
+
+    const client = await getClient();
+
+    try{
+        const data = await client.request(CREATE_GENRE_MUTATION, { name, parentId });
+        return { success: true, genre: data.createGenre };
+    } catch (error: any) {
+        console.error("Eroare GraphQL:", error.response?.errors);
+        return { success: false, message: "Eroare la crearea genului." };
+    }
+}
