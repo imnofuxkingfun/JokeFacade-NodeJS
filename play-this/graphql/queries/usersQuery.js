@@ -5,7 +5,13 @@ import { User, Role } from '../database.js';
 const usersQuery = {
     type: new GraphQLList(UserType),
     args: {},
-    resolve: async () => {
+    resolve: async (_, args, context) => {
+
+        console.log("Context in usersQuery:", context);
+        if(!context.user || context.isAdmmin === false) {
+            throw new Error("Unauthorized");
+        }
+
         return await User.findAll({
             include: [{ model: Role }]
         });
