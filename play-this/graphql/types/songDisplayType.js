@@ -20,7 +20,7 @@ const songDisplayType = new GraphQLObjectType({
             type: new GraphQLList(BlogType),
             resolve: async (song) => {
                 return await song.getBlogs({
-                    include: [{ model: User }, { model: Comment }]
+                    include: [{ model: User }, { model: Comment , include: [User] }]
                 });
             }
         }
