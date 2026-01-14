@@ -660,6 +660,34 @@ const songs = [
   await queryInterface.bulkInsert('blogs', blogs);
   await queryInterface.bulkInsert('comments', comments);
   await queryInterface.bulkInsert('user_liked_songs', likedSongs);
+
+
+  //index reset
+  await queryInterface.sequelize.query(
+    "SELECT setval(pg_get_serial_sequence('roles', 'id'), coalesce(max(id), 0) + 1, false) FROM roles;"
+  );
+  await queryInterface.sequelize.query(
+    "SELECT setval(pg_get_serial_sequence('users', 'id'), coalesce(max(id), 0) + 1, false) FROM users;"
+  );
+  await queryInterface.sequelize.query(
+    "SELECT setval(pg_get_serial_sequence('profiles', 'id'), coalesce(max(id), 0) + 1, false) FROM profiles;"
+  );
+  await queryInterface.sequelize.query(
+    "SELECT setval(pg_get_serial_sequence('genres', 'id'), coalesce(max(id), 0) + 1, false) FROM genres;"
+  );
+  await queryInterface.sequelize.query(
+    "SELECT setval(pg_get_serial_sequence('artists', 'id'), coalesce(max(id), 0) + 1, false) FROM artists;"
+  );
+  await queryInterface.sequelize.query(
+    "SELECT setval(pg_get_serial_sequence('songs', 'id'), coalesce(max(id), 0) + 1, false) FROM songs;"
+  );
+  await queryInterface.sequelize.query(
+    "SELECT setval(pg_get_serial_sequence('blogs', 'id'), coalesce(max(id), 0) + 1, false) FROM blogs;"
+  );
+  await queryInterface.sequelize.query(
+    "SELECT setval(pg_get_serial_sequence('comments', 'id'), coalesce(max(id), 0) + 1, false) FROM comments;"
+  );
+
 },
 
   async down (queryInterface, Sequelize) {

@@ -8,8 +8,6 @@ export interface SongInterface {
     id: string;
     name: string;
     spotifyLink: string;
-    artistId?: number,
-    artistName?: string;
 };
 
 export interface ArtistInterface {
@@ -23,7 +21,12 @@ const RANDOM_SONG_QUERY = gql`
     randomSong{
     id,
     name,
-    spotifyLink
+    spotifyLink,
+    artists {
+            id
+            name
+            description
+        }
   }
 }
 `;
@@ -106,12 +109,11 @@ export async function getRandomSong() {
     try {
         const data = await client.request(RANDOM_SONG_QUERY);
         const song = data.randomSong;
-        const artist = await getSongArtist(parseInt(song.id));
+        const artists = data.randomSong.artists;
         
         return {
             ...song,
-            artistId: artist?.id,
-            artistName: artist?.name
+            artists: artists,
         };
     }
     catch (error: any) {
@@ -285,8 +287,7 @@ export async function getArtistSongs(artistId: number) {
         return null;
     }
 }
-
-
+//for artists page
 const ARTISTS_QUERY = gql`
   query Artists {
     artists {
@@ -307,6 +308,110 @@ export async function getAllArtists() {
     try {
         const data = await client.request(ARTISTS_QUERY);
         return data.artists as ArtistInterface[];
+    }
+    catch (error: any) {
+        console.error("Eroare GraphQL:", error.response?.errors);
+        return null;
+    }
+}
+
+//for songs page
+const SONGS_QUERY = gql`
+  query Songs {
+    songs {
+      id,
+      name,
+      spotifyLink
+    }
+  }
+`;
+
+export async function getAllSongs() {
+    const verification = await verifyUserSession();
+    if (!verification.success) {
+        return null;
+    }
+
+    const client = await getClient();
+    try {
+        const data = await client.request(SONGS_QUERY);
+        return data.songs as SongInterface[];
+    }
+    catch (error: any) {
+        console.error("Eroare GraphQL:", error.response?.errors);
+        return null;
+    }
+}
+
+//for genres page
+export interface GenreInterface {
+    id: string;
+    name: string;
+}
+
+const GENRES_QUERY = gql`
+  query Genres {
+    genres {
+      id,
+      name
+    }
+  }
+`;
+
+export async function getAllGenres() {
+    const verification = await verifyUserSession();
+    if (!verification.success) {
+        return null;
+    }
+
+    const client = await getClient();
+    try {
+        const data = await client.request(GENRES_QUERY);
+        return data.genres as GenreInterface[];
+    }
+    catch (error: any) {
+        console.error("Eroare GraphQL:", error.response?.errors);
+        return null;
+    }
+}
+
+
+//for genre page
+export interface GenreDisplayInterface {
+    id: string;
+    name: string;
+    subgenres?: GenreInterface[];
+    songs?: SongInterface[];
+}
+
+const GENRE_DISPLAY_QUERY = gql`
+  query GenreDisplay($id: ID!) {
+    genreDisplay(id: $id) {
+      id,
+      name,
+      subgenres {
+        id,
+        name
+      },
+      songs {
+        id,
+        name,
+        spotifyLink
+      }
+    }
+  }
+`;
+
+export async function getGenreDisplay(id: string) {
+    const verification = await verifyUserSession();
+    if (!verification.success) {
+        return null;
+    }
+
+    const client = await getClient();
+    try {
+        const data = await client.request(GENRE_DISPLAY_QUERY, { id });
+        return data.genreDisplay as GenreDisplayInterface;
     }
     catch (error: any) {
         console.error("Eroare GraphQL:", error.response?.errors);

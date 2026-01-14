@@ -1,8 +1,8 @@
-import songType from "../types/songType.js";
+import songDisplayType from "../types/songDisplayType.js";
 import { Song, UserLikedSong } from '../database.js';
 import { Sequelize } from "sequelize";
 const randomSongQuery = {
-    type: songType,
+    type: songDisplayType,
     resolve: async (_, args, context) => {
         // Fetch a random song from the database
        const user = context.user;

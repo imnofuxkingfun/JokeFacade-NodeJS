@@ -3,6 +3,8 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import SongEmbedded from '@/components/shared/song';
 import { getSongDisplay, SongDisplayInterface } from '@/actions/songs';
+import { createBlog } from '@/actions/blog';
+import { useAuth } from '@/context/authContext';
 import styles from './song.module.css';
 
 export default function SongDisplayPage() {
@@ -12,6 +14,14 @@ export default function SongDisplayPage() {
     const [loading, setLoading] = useState(true);
     const [currentBlogPage, setCurrentBlogPage] = useState(1);
     const blogsPerPage = 3;
+    
+    // Blog form state
+    const { user } = useAuth();
+    const [showBlogForm, setShowBlogForm] = useState(false);
+    const [blogText, setBlogText] = useState('');
+    const [blogReview, setBlogReview] = useState(5);
+    const [submitting, setSubmitting] = useState(false);
+    const [submitError, setSubmitError] = useState<string | null>(null);
 
     useEffect(() => {
         async function fetchSong() {
@@ -25,6 +35,31 @@ export default function SongDisplayPage() {
         }
         fetchSong();
     }, [songId]);
+
+    const handleSubmitBlog = async (e: React.FormEvent) => {
+        e.preventDefault();
+        if (!songId || !blogText.trim()) return;
+
+        setSubmitting(true);
+        setSubmitError(null);
+
+        try {
+            await createBlog(blogText, blogReview, songId);
+            
+            // Refresh song data to show the new blog
+            const updatedSong = await getSongDisplay(songId);
+            setSong(updatedSong);
+            
+            // Reset form
+            setBlogText('');
+            setBlogReview(5);
+            setShowBlogForm(false);
+        } catch (error) {
+            setSubmitError(error instanceof Error ? error.message : 'Failed to create blog');
+        } finally {
+            setSubmitting(false);
+        }
+    };
 
     if (loading) {
         return <div className={styles.container}>Loading...</div>;
@@ -71,6 +106,78 @@ export default function SongDisplayPage() {
                             </div>
                         ))}
                     </div>
+                </div>
+            )}
+
+            {/* Create Blog Section - Only for logged-in users */}
+            {user && (
+                <div className={styles.createBlogSection}>
+                    {!showBlogForm ? (
+                        <button 
+                            onClick={() => setShowBlogForm(true)}
+                            className={styles.createBlogBtn}
+                        >
+                            Write a Review
+                        </button>
+                    ) : (
+                        <form onSubmit={handleSubmitBlog} className={styles.blogForm}>
+                            <h3>Write Your Review</h3>
+                            
+                            <div className={styles.formGroup}>
+                                <label htmlFor="review">Rating (1-10)</label>
+                                <input
+                                    type="number"
+                                    id="review"
+                                    min="1"
+                                    max="10"
+                                    value={blogReview}
+                                    onChange={(e) => setBlogReview(parseInt(e.target.value))}
+                                    className={styles.reviewInput}
+                                    required
+                                />
+                            </div>
+
+                            <div className={styles.formGroup}>
+                                <label htmlFor="blogText">Your Review</label>
+                                <textarea
+                                    id="blogText"
+                                    value={blogText}
+                                    onChange={(e) => setBlogText(e.target.value)}
+                                    placeholder="Share your thoughts about this song..."
+                                    className={styles.blogTextarea}
+                                    rows={6}
+                                    required
+                                />
+                            </div>
+
+                            {submitError && (
+                                <div className={styles.errorMessage}>{submitError}</div>
+                            )}
+
+                            <div className={styles.formActions}>
+                                <button 
+                                    type="submit" 
+                                    disabled={submitting}
+                                    className={styles.submitBtn}
+                                >
+                                    {submitting ? 'Posting...' : 'Post Review'}
+                                </button>
+                                <button 
+                                    type="button"
+                                    onClick={() => {
+                                        setShowBlogForm(false);
+                                        setBlogText('');
+                                        setBlogReview(5);
+                                        setSubmitError(null);
+                                    }}
+                                    className={styles.cancelBtn}
+                                    disabled={submitting}
+                                >
+                                    Cancel
+                                </button>
+                            </div>
+                        </form>
+                    )}
                 </div>
             )}
 

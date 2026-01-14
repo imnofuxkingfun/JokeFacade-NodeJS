@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import SongEmbedded from '@/components/shared/song';
 import { getSongDisplay, SongDisplayInterface } from '@/actions/songs';
 import styles from '../song/song.module.css';
+import Link from "next/link";
 
 
 
@@ -36,19 +37,29 @@ export default function SwipePage() {
         fetchSong();
     }, []);
 
-    return(
+    return (
         <div>
             <h1>Swipe Page</h1>
-            
+
             {songsAvailable ? (loading ? (
                 <div>Loading...</div>
             ) : song && (
                 <div>
-                    <h2 className="text-xl">{song.name}</h2>
-                    <a href = {`/artist/${song.artistId}`}><h3 className="text-lg">by {song.artistName}</h3></a>
-                    <div className={styles.embedSection}>
-                <SongEmbedded spotifyLink={song.spotifyLink} />
-            </div>
+                    <h2 className="text-xl"><Link href={`/song?id=${song.id}`}>{song.name}</Link></h2>
+                    <div className="flex gap-2 items-center">
+                        <h3 className="text-lg">
+                            By {song.artists?.map((artist, index) => (
+                                <span key={artist.id}>
+                                    <a href={`/artist/${artist.id}`} className="hover:underline">
+                                        {artist.name}
+                                    </a>
+                                    {index < song.artists.length - 1 && ', '}
+                                </span>
+                            ))}
+                        </h3>
+                    </div>
+
+                    <SongEmbedded spotifyLink={song.spotifyLink} />
 
                     {loading ? (<></>) : (
                         <div className="flex gap-4" style={{ justifyContent: "center", alignItems: "center" }}>
@@ -60,8 +71,8 @@ export default function SwipePage() {
                             </button>
                         </div>
                     )}
-                    
-                    
+
+
                 </div>
             )) : (
                 <div>

@@ -1,0 +1,69 @@
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.profileHeader {
+    margin-bottom: 3rem;
+}
+
+.profileHeader h1 {
+    font-size: 2.5rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: #1DB954;
+}
+
+.userInfo {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+    padding: 2rem;
+    background: #f9f9f9;
+    border-radius: 12px;
+    border: 2px solid #e0e0e0;
+}
+
+.infoCard {
+    padding: 1.5rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.infoCard label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: bold;
+    color: #1DB954;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.infoCard p {
+    margin: 0;
+    font-size: 1.1rem;
+    color: #333;
+    word-break: break-word;
+}
+
+.logoutBtn {
+    display: block;
+    margin: 0 auto;
+    padding: 0.75rem 2rem;
+    background: #ff4444;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.3s ease;
+}
+
+.logoutBtn:hover {
+    background: #cc0000;
+}

@@ -1,6 +1,6 @@
 import ArtistSongsType from "../types/artistSongsType.js";
 import {  GraphQLID } from "graphql";
-import { Artist, Song, SongArtist } from "../database.js";
+import { Artist, Song } from "../database.js";
 
 const artistSongsQuery = {
     type: ArtistSongsType,
@@ -13,8 +13,7 @@ const artistSongsQuery = {
             throw new Error('Artist not found');
         }
 
-        const songLinks = await SongArtist.findAll({ where: { artist_id: args.artistId } });
-        const songs = await Promise.all(songLinks.map((songLink)=> Song.findByPk(songLink.song_id)));
+        const songs = await artist.getSongs();
 
         return{
             artist: artist,
