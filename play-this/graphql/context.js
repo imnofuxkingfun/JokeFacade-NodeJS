@@ -21,7 +21,7 @@ export async function createContext({ req, res }) {
         throw new Error('User not found');
       }
 
-      console.log('Authenticated user:', user.username);
+      // console.log('Authenticated user:', user);
     } catch (err) {
       console.error('Token verification failed:', err.message);
       // Token is invalid or expired, user remains null
@@ -33,7 +33,7 @@ export async function createContext({ req, res }) {
     res,
     user,
     JWT_SECRET,
-    isAdmin: user?.Role?.name === 'admin',
+    isAdmin: user?.role_id === 2,
   };
 }
 

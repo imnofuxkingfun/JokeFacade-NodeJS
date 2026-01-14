@@ -7,6 +7,9 @@ interface User {
   id: string;
   username: string;
   email: string;
+  role: {
+    id: string;
+  };
 }
 
 // 2. Definim ce conține Contextul (date + funcții)

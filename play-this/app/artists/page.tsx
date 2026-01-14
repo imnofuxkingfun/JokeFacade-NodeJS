@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { getAllArtists, ArtistInterface } from '@/actions/songs';
 import styles from '../song/song.module.css';
+import { useAuth } from '@/context/authContext';
 
 export default function ArtistsPage() {
     const [artists, setArtists] = useState<ArtistInterface[]>([]);
@@ -10,7 +11,10 @@ export default function ArtistsPage() {
     const [currentPage, setCurrentPage] = useState(1);
     const artistsPerPage = 12;
 
+    const { user } = useAuth();
+
     useEffect(() => {
+        console.log("User in ArtistsPage:", user);
         async function fetchArtists() {
             const data = await getAllArtists();
             setArtists(data || []);
@@ -42,7 +46,13 @@ export default function ArtistsPage() {
     return (
         <div className={styles.container}>
             <h1>Browse Artists</h1>
-            
+            {user?.role?.id === '2' && (
+                <a href="/artists/new">
+                    <button className="mb-4 bg-green-500 text-white p-2 rounded">
+                        Add New Artist
+                    </button>
+                </a>
+            )}
             <div className={styles.artistsGrid}>
                 {displayedArtists.map((artist) => (
                     <div key={artist.id} className={styles.artistCard}>

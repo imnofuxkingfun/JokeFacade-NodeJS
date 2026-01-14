@@ -38,6 +38,9 @@ const SESSION_USER_QUERY = gql`
       id
       username
       email
+      role{
+        id
+      }
     }
   }
 `;

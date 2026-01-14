@@ -10,14 +10,12 @@ const createArtistMutation = {
     song_ids: { type: new GraphQLList(GraphQLInt) },
   },
   async resolve(_, { input, song_ids, }, context) {
-    
     //user must be admin to add an artist
     if (!context.user || !context.isAdmin) {
       throw new Error('Unauthorized: only admins can add artists');
     }
 
     const artist = await Artist.create(input);
-
     
     if (song_ids && song_ids.length > 0) {
       const songs = await Song.findAll({ where: { id: song_ids } });

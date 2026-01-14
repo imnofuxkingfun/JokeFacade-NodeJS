@@ -20,3 +20,9 @@ export const LoginFormSchema = z.object({
     .regex(/[0-9]/, { message: 'It must contain at least one number.' })
     .trim(),
 });
+
+export const NewArtistSchema = z.object({
+  name: z.string().min(1, { message: 'Artist name must be at least 1 character long.' }).trim(),
+  description: z.string().min(10, { message: 'Description must be at least 10 characters long.' }).trim(),
+});
+    
