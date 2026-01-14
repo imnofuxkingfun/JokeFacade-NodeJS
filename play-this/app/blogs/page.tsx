@@ -1,11 +1,11 @@
 'use client';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { use, useEffect, useState } from 'react';
 import { getAllBlogs, createComment, editComment, deleteComment, editBlog, deleteBlog, Blog } from '@/actions/blog';
 import { useAuth } from '@/context/authContext';
 
 type PageProps = {
-  searchParams?: { page?: string; limit?: string };
+  searchParams?: Promise<{ page?: string; limit?: string }>;
 };
 
 export default function BlogsPage({ searchParams }: PageProps) {
@@ -42,7 +42,7 @@ export default function BlogsPage({ searchParams }: PageProps) {
   const [blogEditError, setBlogEditError] = useState<{ [blogId: string]: string | null }>({});
   const [deletingBlog, setDeletingBlog] = useState<{ [blogId: string]: boolean }>({});
 
-  const params = (searchParams) ?? {};
+  const params = searchParams ? use(searchParams) : {};
   const page = Number(params.page ?? '1');
   const limit = Number(params.limit ?? '7');
 
