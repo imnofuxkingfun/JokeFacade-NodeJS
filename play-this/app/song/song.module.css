@@ -200,6 +200,146 @@
     text-align: center;
 }
 
+.createBlogSection {
+    margin: 2rem 0 3rem 0;
+    padding: 0.5rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.createBlogBtn {
+    width: 100%;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: white;
+    background: #1DB954;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.createBlogBtn:hover {
+    background: #1ed760;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(29, 185, 84, 0.3);
+}
+
+.blogForm {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.blogForm h3 {
+    margin: 0 0 1.5rem 0;
+    font-size: 1.3rem;
+    color: #333;
+}
+
+.formGroup {
+    margin-bottom: 1.5rem;
+}
+
+.formGroup label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #333;
+    font-size: 0.95rem;
+}
+
+.reviewInput {
+    width: 100%;
+    max-width: 150px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    border: 2px solid #ddd;
+    border-radius: 4px;
+    transition: border-color 0.3s ease;
+    color: #000;
+}
+
+.reviewInput:focus {
+    outline: none;
+    border-color: #1DB954;
+}
+
+.blogTextarea {
+    width: 100%;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-family: inherit;
+    line-height: 1.6;
+    border: 2px solid #1a4924;
+    border-radius: 4px;
+    resize: vertical;
+    transition: border-color 0.3s ease;
+    color: #000000;
+}
+
+.blogTextarea:focus {
+    outline: none;
+    border-color: #1DB954;
+}
+
+.errorMessage {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    background: #fee;
+    color: #c33;
+    border: 1px solid #fcc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.formActions {
+    display: flex;
+    gap: 1rem;
+}
+
+.submitBtn, .cancelBtn {
+    flex: 1;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.submitBtn {
+    background: #1DB954;
+    color: white;
+}
+
+.submitBtn:hover:not(:disabled) {
+    background: #1ed760;
+}
+
+.submitBtn:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+.cancelBtn {
+    background: #f5f5f5;
+    color: #333;
+    border: 1px solid #ddd;
+}
+
+.cancelBtn:hover:not(:disabled) {
+    background: #e5e5e5;
+}
+
+.cancelBtn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
 .paginationBtn {
     padding: 0.5rem 1rem;
     background: #1DB954;
@@ -207,7 +347,7 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
-    font-weight: bold;
+    font-size: 0.9rem;
     transition: background 0.3s ease;
 }
 
@@ -221,8 +361,8 @@
 }
 
 .noBlogs {
-    padding: 2rem;
     text-align: center;
+    padding: 2rem;
     color: #999;
     font-style: italic;
 }

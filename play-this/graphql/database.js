@@ -10,7 +10,6 @@ import SongModel from '../models/Song.js';
 import UserLikedSongModel from '../models/UserLikedSongs.js';
 import BlogModel from '../models/Blog.js';
 import CommentModel from '../models/Comment.js';
-import SongArtistModel from '../models/SongArtist.js';
 
 const sequelize =  new Sequelize(process.env.DATABASE, process.env.DB_USER, process.env.DB_PASSWORD, {
   host: process.env.DB_HOST,
@@ -29,7 +28,6 @@ const Song = SongModel(sequelize);
 const UserLikedSong = UserLikedSongModel(sequelize);
 const Blog = BlogModel(sequelize);
 const Comment = CommentModel(sequelize);
-const SongArtist = SongArtistModel(sequelize);
 
 // User <-> Role
 User.belongsTo(Role, { foreignKey: 'role_id', onDelete: 'RESTRICT' });
@@ -67,13 +65,13 @@ Genre.belongsTo(Genre, {
 
 // Song <-> Artist (Many-to-Many)
 Song.belongsToMany(Artist, { 
-  through: SongArtist,
+  through: 'songArtists',
   foreignKey: 'song_id',
   otherKey: 'artist_id',
   onDelete: 'CASCADE'
 });
 Artist.belongsToMany(Song, { 
-  through: SongArtist,
+  through: 'songArtists',
   foreignKey: 'artist_id',
   otherKey: 'song_id',
   onDelete: 'CASCADE'
@@ -124,8 +122,7 @@ export {
   Song,
   UserLikedSong,
   Blog,
-  Comment,
-  SongArtist
+  Comment
 };
 
 export default {
@@ -138,6 +135,5 @@ export default {
   Song,
   UserLikedSong,
   Blog,
-  Comment,
-  SongArtist
+  Comment
 };

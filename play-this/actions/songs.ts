@@ -8,8 +8,6 @@ export interface SongInterface {
     id: string;
     name: string;
     spotifyLink: string;
-    artistId?: number,
-    artistName?: string;
 };
 
 export interface ArtistInterface {
@@ -23,7 +21,12 @@ const RANDOM_SONG_QUERY = gql`
     randomSong{
     id,
     name,
-    spotifyLink
+    spotifyLink,
+    artists {
+            id
+            name
+            description
+        }
   }
 }
 `;
@@ -106,12 +109,11 @@ export async function getRandomSong() {
     try {
         const data = await client.request(RANDOM_SONG_QUERY);
         const song = data.randomSong;
-        const artist = await getSongArtist(parseInt(song.id));
+        const artists = data.randomSong.artists;
         
         return {
             ...song,
-            artistId: artist?.id,
-            artistName: artist?.name
+            artists: artists,
         };
     }
     catch (error: any) {
