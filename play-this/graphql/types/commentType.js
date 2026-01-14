@@ -1,10 +1,13 @@
 import {GraphQLObjectType, GraphQLID, GraphQLString, GraphQLInt } from 'graphql';
+import userDisplayType from './userDisplayType.js';
 
 const commentType = new GraphQLObjectType({
     name: 'CommentType',
     fields: () => ({
         id: { type: GraphQLID },
-        user_id: { type: GraphQLInt },
+        user: {type: userDisplayType,
+            resolve: (parent) => parent.User
+        },
         blog_id: { type: GraphQLInt },
         text: { type: GraphQLString },
         date: {

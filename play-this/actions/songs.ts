@@ -163,12 +163,15 @@ export async function getAllLikedSongs() {
 }
 
 
-// Add this to songs.ts
 
 export interface CommentInterface {
     id: string;
     text: string;
     date: string;
+    user: {
+        id: string;
+        username: string;
+    };
 }
 
 export interface BlogInterface {
@@ -211,6 +214,11 @@ const SONG_DISPLAY_QUERY = gql`
             },
             comments {
                 id,
+                user {
+                    id,
+                    username
+                },
+                blog_id,
                 text,
                 date
             }

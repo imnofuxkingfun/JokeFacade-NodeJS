@@ -3,7 +3,7 @@ import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import SongEmbedded from '@/components/shared/song';
 import { getSongDisplay, SongDisplayInterface } from '@/actions/songs';
-import { createBlog } from '@/actions/blog';
+import { createBlog, createComment, editComment, deleteComment, editBlog, deleteBlog } from '@/actions/blog';
 import { useAuth } from '@/context/authContext';
 import styles from './song.module.css';
 
@@ -22,6 +22,28 @@ export default function SongDisplayPage() {
     const [blogReview, setBlogReview] = useState(5);
     const [submitting, setSubmitting] = useState(false);
     const [submitError, setSubmitError] = useState<string | null>(null);
+
+    // Comment form state
+    const [showCommentForm, setShowCommentForm] = useState<{ [blogId: string]: boolean }>({});
+    const [commentText, setCommentText] = useState<{ [blogId: string]: string }>({});
+    const [submittingComment, setSubmittingComment] = useState<{ [blogId: string]: boolean }>({});
+    const [commentError, setCommentError] = useState<{ [blogId: string]: string | null }>({});
+
+    // Edit comment state
+    const [editingComment, setEditingComment] = useState<{ [commentId: string]: boolean }>({});
+    const [editCommentText, setEditCommentText] = useState<{ [commentId: string]: string }>({});
+    const [submittingEdit, setSubmittingEdit] = useState<{ [commentId: string]: boolean }>({});
+    const [editError, setEditError] = useState<{ [commentId: string]: string | null }>({});
+
+    // Delete comment state
+    const [deletingComment, setDeletingComment] = useState<{ [commentId: string]: boolean }>({});
+
+    const [editingBlog, setEditingBlog] = useState<{ [blogId: string]: boolean }>({});
+    const [editBlogText, setEditBlogText] = useState<{ [blogId: string]: string }>({});
+    const [editBlogReview, setEditBlogReview] = useState<{ [blogId: string]: number }>({});
+    const [submittingBlogEdit, setSubmittingBlogEdit] = useState<{ [blogId: string]: boolean }>({});
+    const [blogEditError, setBlogEditError] = useState<{ [blogId: string]: string | null }>({});
+    const [deletingBlog, setDeletingBlog] = useState<{ [blogId: string]: boolean }>({});
 
     useEffect(() => {
         async function fetchSong() {
@@ -46,11 +68,9 @@ export default function SongDisplayPage() {
         try {
             await createBlog(blogText, blogReview, songId);
             
-            // Refresh song data to show the new blog
             const updatedSong = await getSongDisplay(songId);
             setSong(updatedSong);
             
-            // Reset form
             setBlogText('');
             setBlogReview(5);
             setShowBlogForm(false);
@@ -58,6 +78,79 @@ export default function SongDisplayPage() {
             setSubmitError(error instanceof Error ? error.message : 'Failed to create blog');
         } finally {
             setSubmitting(false);
+        }
+    };
+
+    const handleSubmitComment = async (blogId: string, e: React.FormEvent) => {
+        e.preventDefault();
+        if (!commentText[blogId]?.trim()) return;
+
+        setSubmittingComment({ ...submittingComment, [blogId]: true });
+        setCommentError({ ...commentError, [blogId]: null });
+
+        try {
+            await createComment(parseInt(blogId), commentText[blogId]);
+            
+            if (songId) {
+                const updatedSong = await getSongDisplay(songId);
+                setSong(updatedSong);
+            }
+            
+            setCommentText({ ...commentText, [blogId]: '' });
+            setShowCommentForm({ ...showCommentForm, [blogId]: false });
+        } catch (error) {
+            setCommentError({ 
+                ...commentError, 
+                [blogId]: error instanceof Error ? error.message : 'Failed to create comment' 
+            });
+        } finally {
+            setSubmittingComment({ ...submittingComment, [blogId]: false });
+        }
+    };
+
+    const handleEditComment = async (commentId: string, e: React.FormEvent) => {
+        e.preventDefault();
+        if (!editCommentText[commentId]?.trim()) return;
+
+        setSubmittingEdit({ ...submittingEdit, [commentId]: true });
+        setEditError({ ...editError, [commentId]: null });
+
+        try {
+            await editComment(parseInt(commentId), editCommentText[commentId]);
+            
+            if (songId) {
+                const updatedSong = await getSongDisplay(songId);
+                setSong(updatedSong);
+            }
+            
+            setEditingComment({ ...editingComment, [commentId]: false });
+            setEditCommentText({ ...editCommentText, [commentId]: '' });
+        } catch (error) {
+            setEditError({ 
+                ...editError, 
+                [commentId]: error instanceof Error ? error.message : 'Failed to edit comment' 
+            });
+        } finally {
+            setSubmittingEdit({ ...submittingEdit, [commentId]: false });
+        }
+    };
+
+    const handleDeleteComment = async (commentId: string) => {
+        if (!confirm('Are you sure you want to delete this comment?')) return;
+
+        setDeletingComment({ ...deletingComment, [commentId]: true });
+
+        try {
+            await deleteComment(parseInt(commentId));
+            
+            if (songId) {
+                const updatedSong = await getSongDisplay(songId);
+                setSong(updatedSong);
+            }
+        } catch (error) {
+            alert(error instanceof Error ? error.message : 'Failed to delete comment');
+        } finally {
+            setDeletingComment({ ...deletingComment, [commentId]: false });
         }
     };
 
@@ -73,6 +166,49 @@ export default function SongDisplayPage() {
     const startIndex = (currentBlogPage - 1) * blogsPerPage;
     const displayedBlogs = song.blogs?.slice(startIndex, startIndex + blogsPerPage) || [];
 
+    const handleEditBlog = async (blogId: string, e: React.FormEvent) => {
+  e.preventDefault();
+  const text = editBlogText[blogId]?.trim();
+  const review = editBlogReview[blogId];
+  if (!text || !songId) return;
+
+  setSubmittingBlogEdit({ ...submittingBlogEdit, [blogId]: true });
+  setBlogEditError({ ...blogEditError, [blogId]: null });
+
+  try {
+    await editBlog(parseInt(blogId), text, review);
+    const updatedSong = await getSongDisplay(songId);
+    setSong(updatedSong);
+
+    setEditingBlog({ ...editingBlog, [blogId]: false });
+    setEditBlogText({ ...editBlogText, [blogId]: '' });
+    setEditBlogReview({ ...editBlogReview, [blogId]: 0 });
+  } catch (error) {
+    setBlogEditError({
+      ...blogEditError,
+      [blogId]: error instanceof Error ? error.message : 'Failed to edit blog',
+    });
+  } finally {
+    setSubmittingBlogEdit({ ...submittingBlogEdit, [blogId]: false });
+  }
+};
+
+const handleDeleteBlog = async (blogId: string) => {
+  if (!confirm('Are you sure you want to delete this blog?')) return;
+  if (!songId) return;
+
+  setDeletingBlog({ ...deletingBlog, [blogId]: true });
+  try {
+    await deleteBlog(parseInt(blogId));
+    const updatedSong = await getSongDisplay(songId);
+    setSong(updatedSong);
+  } catch (error) {
+    alert(error instanceof Error ? error.message : 'Failed to delete blog');
+  } finally {
+    setDeletingBlog({ ...deletingBlog, [blogId]: false });
+  }
+};
+
     const handlePreviousPage = () => {
         setCurrentBlogPage((prev) => Math.max(prev - 1, 1));
     };
@@ -85,12 +221,10 @@ export default function SongDisplayPage() {
         <div className={styles.container}>
             <h1>{song.name}</h1>
 
-            {/* Spotify Embed */}
             <div className={styles.embedSection}>
                 <SongEmbedded spotifyLink={song.spotifyLink} />
             </div>
 
-            {/* Artists Section */}
             {song.artists && song.artists.length > 0 && (
                 <div className={styles.artistsSection}>
                     <h2>Artists</h2>
@@ -109,7 +243,6 @@ export default function SongDisplayPage() {
                 </div>
             )}
 
-            {/* Create Blog Section - Only for logged-in users */}
             {user && (
                 <div className={styles.createBlogSection}>
                     {!showBlogForm ? (
@@ -181,7 +314,6 @@ export default function SongDisplayPage() {
                 </div>
             )}
 
-            {/* Blogs Section */}
             {song.blogs && song.blogs.length > 0 && (
                 <div className={styles.blogsSection}>
                     <h2>Reviews & Discussions</h2>
@@ -191,34 +323,205 @@ export default function SongDisplayPage() {
                                 <div key={blog.id} className={styles.blogCard}>
                                     <div className={styles.blogHeader}>
                                         <span className={styles.blogAuthor}>{blog.user.username}</span>
-                                        <span className={styles.blogDate}>
-                                            {new Date(blog.date).toLocaleDateString()}
-                                        </span>
+                                        <span className={styles.blogDate}>{new Date(blog.date).toLocaleDateString()}</span>
                                         <span className={styles.blogReview}>★ {blog.review}/10</span>
+                                        {user && user.id === String(blog.user.id) && !editingBlog[blog.id] && (
+                                            <div className={styles.commentActions}>
+                                                <button
+                                                    onClick={() => {
+                                                        setEditingBlog({ ...editingBlog, [blog.id]: true });
+                                                        setEditBlogText({ ...editBlogText, [blog.id]: blog.text });
+                                                        setEditBlogReview({ ...editBlogReview, [blog.id]: typeof blog.review === 'number' ? blog.review : 5 });
+                                                    }}
+                                                    className={styles.editCommentBtn}
+                                                    title="Edit blog"
+                                                >
+                                                    ✏️
+                                                </button>
+                                                <button
+                                                    onClick={() => handleDeleteBlog(String(blog.id))}
+                                                    className={styles.deleteCommentBtn}
+                                                    disabled={deletingBlog[blog.id]}
+                                                    title="Delete blog"
+                                                >
+                                                    {deletingBlog[blog.id] ? '...' : '🗑️'}
+                                                </button>
+                                            </div>
+                                        )}
                                     </div>
                                     <p className={styles.blogText}>{blog.text}</p>
+                                    {editingBlog[blog.id] && (
+                                        <form onSubmit={(e) => handleEditBlog(String(blog.id), e)} className={styles.editCommentForm}>
+                                            <div className={styles.formGroup}>
+                                                <label>Rating (1-10)</label>
+                                                <input
+                                                    type="number"
+                                                    min={1}
+                                                    max={10}
+                                                    value={editBlogReview[blog.id] ?? 5}
+                                                    onChange={(e) => setEditBlogReview({ ...editBlogReview, [blog.id]: parseInt(e.target.value) })}
+                                                    className={styles.reviewInput}
+                                                    required
+                                                />
+                                            </div>
+                                            <textarea
+                                                value={editBlogText[blog.id] || ''}
+                                                onChange={(e) => setEditBlogText({ ...editBlogText, [blog.id]: e.target.value })}
+                                                className={styles.editCommentTextarea}
+                                                rows={4}
+                                                required
+                                            />
+                                            {blogEditError[blog.id] && <div className={styles.errorMessage}>{blogEditError[blog.id]}</div>}
+                                            <div className={styles.editCommentActions}>
+                                                <button type="submit" disabled={submittingBlogEdit[blog.id]} className={styles.saveEditBtn}>
+                                                    {submittingBlogEdit[blog.id] ? 'Saving...' : 'Save'}
+                                                </button>
+                                                <button
+                                                    type="button"
+                                                    onClick={() => {
+                                                        setEditingBlog({ ...editingBlog, [blog.id]: false });
+                                                        setEditBlogText({ ...editBlogText, [blog.id]: '' });
+                                                        setEditBlogReview({ ...editBlogReview, [blog.id]: 0 });
+                                                        setBlogEditError({ ...blogEditError, [blog.id]: null });
+                                                    }}
+                                                    className={styles.cancelEditBtn}
+                                                    disabled={submittingBlogEdit[blog.id]}
+                                                >
+                                                    Cancel
+                                                </button>
+                                            </div>
+                                        </form>
+                                    )}
 
-                                    {/* Comments */}
                                     {blog.comments && blog.comments.length > 0 && (
                                         <div className={styles.commentsSection}>
                                             <h4>Comments ({blog.comments.length})</h4>
                                             <div className={styles.commentsList}>
                                                 {blog.comments.map((comment) => (
                                                     <div key={comment.id} className={styles.comment}>
-                                                        <p className={styles.commentText}>{comment.text}</p>
-                                                        <span className={styles.commentDate}>
-                                                            {new Date(comment.date).toLocaleDateString()}
-                                                        </span>
+                                                        {!editingComment[comment.id] ? (
+                                                            <>
+                                                                <div className={styles.commentHeader}>
+                                                                    <p className={styles.commentText}>{comment.text}</p>
+                                                                    {user && user.id === String(comment.user.id) && (
+                                                                        <div className={styles.commentActions}>
+                                                                            <button
+                                                                                onClick={() => {
+                                                                                    setEditingComment({ ...editingComment, [comment.id]: true });
+                                                                                    setEditCommentText({ ...editCommentText, [comment.id]: comment.text });
+                                                                                }}
+                                                                                className={styles.editCommentBtn}
+                                                                                title="Edit comment"
+                                                                            >
+                                                                                ✏️
+                                                                            </button>
+                                                                            <button
+                                                                                onClick={() => handleDeleteComment(comment.id)}
+                                                                                className={styles.deleteCommentBtn}
+                                                                                disabled={deletingComment[comment.id]}
+                                                                                title="Delete comment"
+                                                                            >
+                                                                                {deletingComment[comment.id] ? '...' : '🗑️'}
+                                                                            </button>
+                                                                        </div>
+                                                                    )}
+                                                                </div>
+                                                                <span className={styles.commentDate}>
+                                                                    {new Date(comment.date).toLocaleDateString()}
+                                                                </span>
+                                                            </>
+                                                        ) : (
+                                                            <form onSubmit={(e) => handleEditComment(comment.id, e)} className={styles.editCommentForm}>
+                                                                <textarea
+                                                                    value={editCommentText[comment.id] || ''}
+                                                                    onChange={(e) => setEditCommentText({ ...editCommentText, [comment.id]: e.target.value })}
+                                                                    className={styles.editCommentTextarea}
+                                                                    rows={2}
+                                                                    required
+                                                                />
+                                                                {editError[comment.id] && (
+                                                                    <div className={styles.errorMessage}>{editError[comment.id]}</div>
+                                                                )}
+                                                                <div className={styles.editCommentActions}>
+                                                                    <button
+                                                                        type="submit"
+                                                                        disabled={submittingEdit[comment.id]}
+                                                                        className={styles.saveEditBtn}
+                                                                    >
+                                                                        {submittingEdit[comment.id] ? 'Saving...' : 'Save'}
+                                                                    </button>
+                                                                    <button
+                                                                        type="button"
+                                                                        onClick={() => {
+                                                                            setEditingComment({ ...editingComment, [comment.id]: false });
+                                                                            setEditCommentText({ ...editCommentText, [comment.id]: '' });
+                                                                            setEditError({ ...editError, [comment.id]: null });
+                                                                        }}
+                                                                        className={styles.cancelEditBtn}
+                                                                        disabled={submittingEdit[comment.id]}
+                                                                    >
+                                                                        Cancel
+                                                                    </button>
+                                                                </div>
+                                                            </form>
+                                                        )}
                                                     </div>
                                                 ))}
                                             </div>
+                                        </div>
+                                    )}
+
+                                    {user && (
+                                        <div className={styles.addCommentSection}>
+                                            {!showCommentForm[blog.id] ? (
+                                                <button
+                                                    onClick={() => setShowCommentForm({ ...showCommentForm, [blog.id]: true })}
+                                                    className={styles.addCommentBtn}
+                                                >
+                                                    Add Comment
+                                                </button>
+                                            ) : (
+                                                <form onSubmit={(e) => handleSubmitComment(blog.id, e)} className={styles.commentForm}>
+                                                    <textarea
+                                                        value={commentText[blog.id] || ''}
+                                                        onChange={(e) => setCommentText({ ...commentText, [blog.id]: e.target.value })}
+                                                        placeholder="Write a comment..."
+                                                        className={styles.commentTextarea}
+                                                        rows={3}
+                                                        required
+                                                    />
+                                                    {commentError[blog.id] && (
+                                                        <div className={styles.errorMessage}>{commentError[blog.id]}</div>
+                                                    )}
+                                                    <div className={styles.commentFormActions}>
+                                                        <button
+                                                            type="submit"
+                                                            disabled={submittingComment[blog.id]}
+                                                            className={styles.submitCommentBtn}
+                                                        >
+                                                            {submittingComment[blog.id] ? 'Posting...' : 'Post Comment'}
+                                                        </button>
+                                                        <button
+                                                            type="button"
+                                                            onClick={() => {
+                                                                setShowCommentForm({ ...showCommentForm, [blog.id]: false });
+                                                                setCommentText({ ...commentText, [blog.id]: '' });
+                                                                setCommentError({ ...commentError, [blog.id]: null });
+                                                            }}
+                                                            className={styles.cancelCommentBtn}
+                                                            disabled={submittingComment[blog.id]}
+                                                        >
+                                                            Cancel
+                                                        </button>
+                                                    </div>
+                                                </form>
+                                            )}
                                         </div>
                                     )}
                                 </div>
                             ))}
                         </div>
 
-                        {/* Pagination */}
                         {totalPages > 1 && (
                             <div className={styles.pagination}>
                                 <button

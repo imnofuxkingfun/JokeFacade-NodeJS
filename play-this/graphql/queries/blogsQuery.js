@@ -11,7 +11,7 @@ const blogsQuery = {
             include: [
                 { model: User },
                 { model: Song },
-                { model: Comment }
+                { model: Comment, include: [User] }
             ]
         });
     }

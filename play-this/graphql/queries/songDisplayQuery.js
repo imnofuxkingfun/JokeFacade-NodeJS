@@ -11,7 +11,7 @@ const songDisplayQuery = {
     return await Song.findByPk(args.id, {
       include: [
         { model: Artist },                         // eager loading
-        { model: Blog, include: [User, Comment] } 
+        { model: Blog, include: [User, {model: Comment, include: [User]}] } 
       ]
     });
   }

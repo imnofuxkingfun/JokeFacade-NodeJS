@@ -46,7 +46,7 @@ export default function ArtistsPage() {
     return (
         <div className={styles.container}>
             <h1>Browse Artists</h1>
-            {user?.role?.id === '2' && (
+            {user?.role?.id === '1' && (
                 <a href="/artists/new">
                     <button className="mb-4 bg-green-500 text-white p-2 rounded">
                         Add New Artist

@@ -10,7 +10,7 @@ const blogQuery = {
     },
     resolve: async (parent, args, context) => {
         return await Blog.findByPk(args.id, {
-            include: [{ model: User }, { model: Song }, { model: Comment }]
+            include: [{ model: User }, { model: Song }, { model: Comment, include: [User] }]
         });
     }
 };
