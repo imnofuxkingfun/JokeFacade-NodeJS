@@ -11,7 +11,11 @@ import userQuery from './queries/userQuery.js';
 import usersQuery from './queries/usersQuery.js';
 import sessionUserQuery from './queries/sessionUserQuery.js';
 import songDisplayQuery from './queries/songDisplayQuery.js'; 
-
+import genreQuery from './queries/genreQuery.js';
+import genresQuery from './queries/genresQuery.js';
+import songArtistQuery from './queries/songArtistQuery.js';
+import artistSongsQuery from './queries/artistSongsQuery.js';
+import genreDisplayQuery from './queries/genreDisplayQuery.js';
 import blogQuery from './queries/blogQuery.js';
 import blogsQuery from './queries/blogsQuery.js';
 
@@ -40,8 +44,7 @@ import deleteUserMutation from './mutations/deleteUserMutation.js';
 import editUserMutation from './mutations/editUserMutation.js';
 import addLikedSongMutation from './mutations/addLikedSongMutation.js';
 import deleteLikedSongMutation from './mutations/deleteLikedSongMutation.js';
-import songArtistQuery from './queries/songArtistQuery.js';
-import artistSongsQuery from './queries/artistSongsQuery.js';
+
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -61,7 +64,10 @@ const RootQuery = new GraphQLObjectType({
     blogs: blogsQuery,
     songDisplay: songDisplayQuery,
     songArtist: songArtistQuery,
-    artistSongs: artistSongsQuery
+    artistSongs: artistSongsQuery,
+    genre: genreQuery,
+    genres: genresQuery,
+    genreDisplay: genreDisplayQuery,
   }
 });
 
