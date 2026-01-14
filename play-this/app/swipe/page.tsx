@@ -2,13 +2,17 @@
 
 import { getRandomSong, likeSong, SongInterface } from "@/actions/songs";
 import { useState, useEffect } from "react";
+import SongEmbedded from '@/components/shared/song';
+import { getSongDisplay, SongDisplayInterface } from '@/actions/songs';
+import styles from '../song/song.module.css';
 
 
 
 export default function SwipePage() {
-    const [song, setSong] = useState<SongInterface | null>(null);
+    const [song, setSong] = useState<SongDisplayInterface | null>(null);
     const [loading, setLoading] = useState(true);
     const [songsAvailable, setSongsAvailable] = useState(true);
+
 
     const fetchSong = async () => {
         setLoading(true);
@@ -40,11 +44,12 @@ export default function SwipePage() {
                 <div>Loading...</div>
             ) : song && (
                 <div>
-                    <h2>{song.name}</h2>
-                    <a href={song.spotifyLink} target="_blank" rel="noopener noreferrer">Listen on Spotify</a>
-                    <br />
+                    <div className={styles.embedSection}>
+                <SongEmbedded spotifyLink={song.spotifyLink} />
+            </div>
+
                     {loading ? (<></>) : (
-                        <div>
+                        <div className="flex gap-4" style={{ justifyContent: "center", alignItems: "center" }}>
                             <button onClick={fetchSong} disabled={loading} className="mt-4 bg-red-500 text-white p-2 rounded">
                                 {'Dislike Song'}
                             </button>

@@ -10,6 +10,7 @@ import userLikedSongsQuery from './queries/userLikedSongsQuery.js';
 import userQuery from './queries/userQuery.js';
 import usersQuery from './queries/usersQuery.js';
 import sessionUserQuery from './queries/sessionUserQuery.js';
+import songDisplayQuery from './queries/songDisplayQuery.js'; 
 
 import blogQuery from './queries/blogQuery.js';
 import blogsQuery from './queries/blogsQuery.js';
@@ -56,6 +57,7 @@ const RootQuery = new GraphQLObjectType({
     sessionUser: sessionUserQuery,
     blog: blogQuery,
     blogs: blogsQuery,
+    songDisplay: songDisplayQuery,
   }
 });
 

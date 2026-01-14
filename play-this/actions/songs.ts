@@ -108,3 +108,83 @@ export async function getAllLikedSongs() {
         return { success: false, message: "Eroare la salvarea melodiei." };
     }
 }
+
+
+// Add this to songs.ts
+
+export interface ArtistInterface {
+    id: string;
+    name: string;
+    description?: string;
+}
+
+export interface CommentInterface {
+    id: string;
+    text: string;
+    date: string;
+}
+
+export interface BlogInterface {
+    id: string;
+    text: string;
+    date: string;
+    review: number;
+    user: {
+        id: string;
+        username: string;
+    };
+    comments: CommentInterface[];
+}
+
+export interface SongDisplayInterface extends SongInterface {
+    artists: ArtistInterface[];
+    blogs: BlogInterface[];
+}
+
+const SONG_DISPLAY_QUERY = gql`
+  query SongDisplay($id: ID!) {
+    songDisplay(id: $id) {
+        id,
+        name,
+        length,
+        spotifyLink,
+        artists {
+            id,
+            name,
+            description
+        },
+        blogs {
+            id,
+            text,
+            date,
+            review,
+            user {
+                id,
+                username
+            },
+            comments {
+                id,
+                text,
+                date
+            }
+        }
+    }
+}
+`;
+
+export async function getSongDisplay(id: string) {
+    const verification = await verifyUserSession();
+    if (!verification.success) {
+        return null;
+    }
+
+    const client = await getClient();
+    try {
+        const data = await client.request(SONG_DISPLAY_QUERY, { id });
+        return data.songDisplay as SongDisplayInterface;
+    }
+    catch (error: any) {
+        console.error("Eroare GraphQL:", error.response?.errors);
+        return null;
+    }
+}

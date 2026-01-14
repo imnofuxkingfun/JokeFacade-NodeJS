@@ -41,7 +41,7 @@ export default async function BlogsPage({ searchParams }: PageProps) {
             {b.song && (
               <div style={{ fontSize: 14, color: '#555', marginBottom: 8 }}>
                 Song: {b.song.name} {b.song.spotifyLink ? (
-                  <a href={b.song.spotifyLink} target="_blank" rel="noreferrer">[open]</a>
+                  <a href={`/song?id=${b.song.id}`} target="_blank" rel="noreferrer">[open]</a>
                 ) : null}
               </div>
             )}
