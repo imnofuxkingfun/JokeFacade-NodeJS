@@ -17,7 +17,7 @@ export default function SwipePage() {
     const fetchSong = async () => {
         setLoading(true);
         const randomSong = await getRandomSong();
-        if(!randomSong){
+        if (!randomSong) {
             setSongsAvailable(false);
             setLoading(false);
             return;
@@ -44,6 +44,8 @@ export default function SwipePage() {
                 <div>Loading...</div>
             ) : song && (
                 <div>
+                    <h2 className="text-xl">{song.name}</h2>
+                    <a href = {`/artist/${song.artistId}`}><h3 className="text-lg">by {song.artistName}</h3></a>
                     <div className={styles.embedSection}>
                 <SongEmbedded spotifyLink={song.spotifyLink} />
             </div>

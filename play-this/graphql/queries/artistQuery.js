@@ -5,10 +5,10 @@ import { Artist } from '../database.js';
 const artistQuery = {
     type: ArtistType,
     args: {
-        id: { type: new GraphQLNonNull(GraphQLID) }
+        artistId: { type: new GraphQLNonNull(GraphQLID) }
     },
     resolve: async (parent, args) => {
-        return await Artist.findByPk(args.id);
+        return await Artist.findByPk(args.artistId);
     }
 }
 
