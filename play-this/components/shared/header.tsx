@@ -20,6 +20,9 @@ const Header = () => {
                     </>
                 )
                 }
+                <a href="/songs">Songs</a>
+                <a href="/artists">Artists</a>
+                <a href="/genres">Genres</a>
                 <a href="/blogs">Blogs</a>
             </nav>
         </header>

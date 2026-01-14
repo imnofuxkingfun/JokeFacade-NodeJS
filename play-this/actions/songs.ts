@@ -285,3 +285,31 @@ export async function getArtistSongs(artistId: number) {
         return null;
     }
 }
+
+
+const ARTISTS_QUERY = gql`
+  query Artists {
+    artists {
+      id,
+      name,
+      description
+    }
+  }
+`;
+
+export async function getAllArtists() {
+    const verification = await verifyUserSession();
+    if (!verification.success) {
+        return null;
+    }
+
+    const client = await getClient();
+    try {
+        const data = await client.request(ARTISTS_QUERY);
+        return data.artists as ArtistInterface[];
+    }
+    catch (error: any) {
+        console.error("Eroare GraphQL:", error.response?.errors);
+        return null;
+    }
+}

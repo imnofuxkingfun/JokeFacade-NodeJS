@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { ArtistInterface, getArtistSongs } from "@/actions/songs";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 
 export default function ArtistPage() {
     const [artist, setArtist] = useState<ArtistInterface | null>(null);
@@ -33,7 +34,7 @@ export default function ArtistPage() {
             <h2>Songs</h2>
             {songs.map((song: any) => (
                 <div key={song.id} className="p-4">
-                    <h3 className="text-lg font-semibold">{song.name}</h3>
+                    <h3 className="text-lg font-semibold"><Link href={`/song?id=${song.id}`}>{song.name}</Link></h3>
                 </div>
             ))}
         </div>
