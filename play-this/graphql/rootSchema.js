@@ -39,6 +39,8 @@ import deleteUserMutation from './mutations/deleteUserMutation.js';
 import editUserMutation from './mutations/editUserMutation.js';
 import addLikedSongMutation from './mutations/addLikedSongMutation.js';
 import deleteLikedSongMutation from './mutations/deleteLikedSongMutation.js';
+import songArtistQuery from './queries/songArtistQuery.js';
+import artistSongsQuery from './queries/artistSongsQuery.js';
 
 const RootQuery = new GraphQLObjectType({
   name: 'RootQueryType',
@@ -56,6 +58,8 @@ const RootQuery = new GraphQLObjectType({
     sessionUser: sessionUserQuery,
     blog: blogQuery,
     blogs: blogsQuery,
+    songArtist: songArtistQuery,
+    artistSongs: artistSongsQuery
   }
 });
 

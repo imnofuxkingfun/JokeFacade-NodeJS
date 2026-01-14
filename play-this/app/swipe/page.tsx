@@ -42,6 +42,7 @@ export default function SwipePage() {
                 ) : song && (
                     <div>
                         <h2 className="text-xl">{song.name}</h2>
+                        <h3 className="text-lg">by {song.artistName}</h3>
                         <a href={song.spotifyLink} target="_blank" rel="noopener noreferrer">Listen on Spotify</a>
                         <br />
                         {loading ? (<></>) : (

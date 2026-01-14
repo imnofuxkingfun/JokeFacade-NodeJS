@@ -8,7 +8,14 @@ export interface SongInterface {
     id: string;
     name: string;
     spotifyLink: string;
+    artistId?: number,
+    artistName?: string;
 };
+
+export interface ArtistInterface {
+    name: string;
+    description: string;
+}
 
 const RANDOM_SONG_QUERY = gql`
   query RandomSong {
@@ -50,6 +57,14 @@ mutation DeleteLikedSong($songId: ID!) {
 }
 `;
 
+const SONG_ARTIST_QUERY = gql`
+  query SongArtist($songId: ID!) {
+    songArtist(songId: $songId) {
+        id,
+        name,
+}}
+`;
+
 async function verifyUserSession() {
     const cookieStore = await cookies();
     const token = cookieStore.get('session_token')?.value;
@@ -62,6 +77,24 @@ async function verifyUserSession() {
     return { success: true };
 }
 
+async function getSongArtist(songId: number){
+    const verification = await verifyUserSession();
+    if (!verification.success) {
+        return verification;
+    }
+
+    const client = await getClient();
+
+    try{
+        const data = await client.request(SONG_ARTIST_QUERY, { songId });
+        return data.songArtist;
+    }
+    catch (error: any) {
+        console.error("Eroare GraphQL:", error.response?.errors);
+        return null;
+    }
+}
+
 export async function getRandomSong() {
     const verification = await verifyUserSession();
     if (!verification.success) {
@@ -71,7 +104,14 @@ export async function getRandomSong() {
     const client = await getClient();
     try {
         const data = await client.request(RANDOM_SONG_QUERY);
-        return data.randomSong;
+        const song = data.randomSong;
+        const artist = await getSongArtist(parseInt(song.id));
+        
+        return {
+            ...song,
+            artistId: artist?.id,
+            artistName: artist?.name
+        };
     }
     catch (error: any) {
         console.error("Eroare GraphQL:", error.response?.errors);
@@ -134,5 +174,40 @@ export async function removeLikedSong(songId: number) {
     catch (error: any) {
         console.error("Eroare GraphQL:", error.response?.errors);
         return { success: false, message: "Eroare la stergerea melodiei." };
+    }
+}
+
+export async function getArtistSongs(artistId: number) {
+    const verification = await verifyUserSession();
+    if (!verification.success) {
+        return verification;
+    }
+
+    const client = await getClient();
+
+    const ARTIST_QUERY = gql`
+      query ArtistSongs($artistId: ID!) {
+        artistSongs(artistId: $artistId) {
+            artist {
+                name,
+                description
+            },
+            songs {
+                id,
+                name,
+                length
+            }
+        }
+    }
+    `;
+
+    try{
+        const data = await client.request(ARTIST_QUERY, { artistId });
+        
+        return data.artistSongs;
+    }
+    catch (error: any) {
+        console.error("Eroare GraphQL:", error.response?.errors);
+        return null;
     }
 }
